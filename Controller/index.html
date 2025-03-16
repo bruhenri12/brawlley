@@ -2,89 +2,23 @@
 <html>
 <head>
     <title>Game Controller</title>
-    <style>
-        /* Style your buttons for mobile */
-		body {
-			min-height: 100vh;
-			box-sizing: border-box;
-		}
-		.hidden {
-			display: none;
-		}
-		.button-container {
-			display: flex;
-			align-items: center;
-		}
-
-		.button-container .container {
-			display: flex;
-			align-items: center;
-		}
-
-		.left-button-container {
-			display: flex;
-			position: relative;
-			width: 45%;
-			border: 1px red solid;
-			gap: 10px;
-
-		}
-
-		.right-button-container {
-			display: flex;
-			flex-direction: column;
-			gap: 10px;
-			border: 1px blue solid;
-			margin-left: auto;
-			align-items: center;
-
-		}
-
-		.button-row {
-			display: flex;
-			justify-content: center;
-			gap: 20px;
-		}
-
-		.first-row {
-
-		}
-
-
-		.y-buttons {
-			display: flex;
-			flex-direction: column;
-			justify-content: space-between;
-			gap: 20px;
-			margin-top: -20px;
-		}
-		
-		button {
-			width: 100px;
-			aspect-ratio: 1/1;
-		}
-
-        button {
-            font-size: 24px;
-        }
-    </style>
+	<link rel="stylesheet" type="text/css" href="styles.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 </head>
 <body>
-	<h1 id="title">Title</h1>
-	<div class="hidden" style="display: none;">Pressing</div>
+	<h1 id="title"></h1>
+	<div id="pressing" class="hidden">Pressing</div>
 
 	<div class="button-container">
 		<div class="left-button-container">
-			<div class="left container">
-				<button id="left-button" class="movement controller-button" data-x="-1" data-y="0">LEFT</button>
-			</div>
-			<div class="y-buttons">
-				<button id="up-button" class="movement controller-button" data-x="0" data-y="1">UP</button>
-				<button id="down-button" class="movement controller-button" data-x="0" data-y="-1" >DOWN</button>
-			</div>
-			<div class="right container">
-				<button id="right-button" class="movement controller-button" data-x="1" data-y="0">RIGHT</button>
-			</div>
+			<button id="up-left-button" class="movement diagonal controller-button" data-x="0" data-y="1"></button>
+			<button id="up-right-button" class="movement diagonal controller-button" data-x="0" data-y="1"></button>
+			<button id="down-left-button" class="movement diagonal controller-button" data-x="0" data-y="1"></button>
+			<button id="down-right-button" class="movement diagonal controller-button" data-x="0" data-y="1"></button>
+			<button id="up-button" class="movement controller-button" data-x="0" data-y="1">UP</button>
+			<button id="right-button" class="movement controller-button" data-x="1" data-y="0">RIGHT</button>
+			<button id="left-button" class="movement controller-button" data-x="-1" data-y="0">LEFT</button>
+			<button id="down-button" class="movement controller-button" data-x="0" data-y="-1" >DOWN</button>
 		</div>
 		<div class="right-button-container">
 			<div class="buttton-row first-row">
@@ -106,6 +40,22 @@
 	</div>
 
     <script>
+		let lastSentTimestamp = 0;
+		let latencyDisplay = document.createElement('div');
+		let latencyAvgDisplay = document.createElement('div');
+		document.body.appendChild(latencyDisplay);
+		document.body.appendChild(latencyAvgDisplay);
+
+
+		// Modified send function with timestamps
+		function createMessage(commandCode) {
+			const buffer = new ArrayBuffer(9); // 1 byte command + 8 bytes timestamp
+			const view = new DataView(buffer);
+			const timestamp = Date.now();
+			view.setUint8(0, commandCode);
+			view.setFloat64(1, timestamp, true); // Little-endian
+			return buffer;
+		}
 
 		const buttonMapping = {
 			"left-button": 0x03,   // MoveLeft
@@ -116,7 +66,11 @@
 			"block-button": 0x0B,  // Parry (Blocking)
 			"cast-button": 0x0C,   // SpellStart
 			"dash-button": 0x0A,   // Dash
-			"jump-button": 0x09    // Jump
+			"jump-button": 0x09,    // Jump
+			"up-left-button": 0x0F, // MoveUpLeft
+			"up-right-button": 0x10, // MoveUpRight
+			"down-left-button": 0x11, // MoveDownLeft
+			"down-right-button": 0x12, // MoveDownRight
 		};
 
 
@@ -124,9 +78,14 @@
 			"left-button": 0x07,  // StopMoveLeft
 			"right-button": 0x08, // StopMoveRight
 			"up-button": 0x05,    // StopMoveUp
-			"down-button": 0x06   // StopMoveDown
+			"down-button": 0x06,   // StopMoveDown
+			"cast-button": 0x0D,   // SpellEnd
+			"up-left-button": 0x13, // StopUpLeft
+			"up-right-button": 0x13, // StopUpRight
+			"down-left-button": 0x13, // StopDownLeft
+			"down-right-button": 0x13, // StopDownRight
 		};
-        const socket = new WebSocket("ws://192.168.1.10:8080");
+        const socket = new WebSocket("ws://192.168.1.7:8080");
 
         socket.addEventListener("open", (event) => {
             console.log("Connected to Unity server!");
@@ -137,32 +96,6 @@
         });
 		
 		let latency = 0;
-
-		// setInterval(() => {
-		// 	const timestamp = BigInt(Date.now()); 
-		// 	const buffer = new ArrayBuffer(9);
-		// 	const view = new DataView(buffer);
-		// 	view.setUint8(0, 99); 
-		// 	view.setBigUint64(1, timestamp, true);
-		// 	socket.send("ping");
-		// 	console.log("sent ping")
-		// }, 1000);
-
-		// // Handle pong responses
-		// socket.onmessage = async (event) => {
-		// 	if (event.data.size === 9) {
-		// 		const arrayBuffer = await event.data.arrayBuffer();
-		// 		const view = new DataView(arrayBuffer);
-		// 		const marker = view.getUint8(0);
-		// 		if (marker === 100) { 
-		// 			const serverTimestamp = view.getBigUint64(1, true);
-		// 			const now = Date.now();
-		// 			const rtt = now - Number(serverTimestamp); 
-		// 			latency = rtt / 2; 
-		// 			document.getElementById('title').innerText = `Latency: ${latency}ms`;
-		// 		}
-		// 	}
-		// };
 
         function send(event, command) {
 			console.log(event)
@@ -180,10 +113,20 @@
 			}
 			frameIds[index] = requestAnimationFrame(pressButton.bind(null, buffer, index))
 		}
+		const pressFunction = (commandCode, index) => {
+			const buffer = createMessage(commandCode);
+			lastSentTimestamp = Date.now();
+			if (socket.readyState === WebSocket.OPEN) {
+				socket.send(buffer);
+			}
+			if (index >= 0 ) {
+				frameIds[index] = requestAnimationFrame(() => pressFunction(commandCode, index));
+			} 
+		};
 
 		const controllerButtons = document.querySelectorAll('.controller-button')
 		const pressingElement = document.querySelector('.hidden')
-		const downEvent = (i, event) => {
+		let downEvent = (i, event) => {
 			console.log("mouse down")
 			const xString = event.target.getAttribute("data-x");
 			const yString = event.target.getAttribute("data-y");
@@ -202,6 +145,13 @@
 			pressingElement.classList.remove('hidden');
 		}
 
+		downEvent = (i, event) => {
+			console.log("callign this down")
+			const code = buttonMapping[event.target.id];
+			frameIds[i] = requestAnimationFrame(() => pressFunction(code, i));
+		}
+
+
 		const upEvent = (i, event) => {
 			const frameId = frameIds[i]
 			if (frameId) {
@@ -211,6 +161,10 @@
 				if (stopCode === undefined) {
 					return;
 				}
+
+				pressFunction(stopCode, -1)
+				return
+
 				const buffer = new ArrayBuffer(1);
 				const dataView = new DataView(buffer);
 				dataView.setUint8(0, stopCode);
@@ -228,8 +182,28 @@
 			button.addEventListener('mouseup', upEventBind);
 			button.addEventListener('touchstart', downEventBind);
 			button.addEventListener('touchend', upEventBind);
-		})
-	
+		}) 
+
+		const latencyList = []
+		let latencyIndex = 0
+		socket.addEventListener('message', (event) => {
+			if (typeof event.data === 'string') {
+				latency = (Date.now() - parseInt(event.data)) / 2;
+				if (latencyList.length < 100) {
+					latencyList.push(latency);
+				}
+				else {
+					latencyList[latencyIndex] = latency
+					latencyIndex = (latencyIndex + 1) % 100
+				}
+				const latencyAvg = Math.round(latencyList.reduce((acc, curr) => acc + curr) / latencyList.length * 100) / 100
+
+
+				latencyDisplay.textContent = `Last command latency: ${latency}ms`;
+				latencyAvgDisplay.textContent = `Latency Avg (last 100 commands): ${latencyAvg}`;
+			}
+		});
+
     </script>
 </body>
 </html>
