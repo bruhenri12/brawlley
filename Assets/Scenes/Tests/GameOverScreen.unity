@@ -2096,6 +2096,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &2123214785 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1713198858853279929, guid: 1d593e05726268c43bfedad0b286d110, type: 3}
+  m_PrefabInstance: {fileID: 6399883828057783605}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2127998401 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 693167550192082120, guid: 2ad52fc3931928d46bc7aae762531ab5, type: 3}
@@ -2262,6 +2267,22 @@ PrefabInstance:
       propertyPath: gameOverScreen
       value: 
       objectReference: {fileID: 359513506}
+    - target: {fileID: 122877765720794322, guid: 36ff61ce2d041074f962245c81bd2e86, type: 3}
+      propertyPath: players.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 122877765720794322, guid: 36ff61ce2d041074f962245c81bd2e86, type: 3}
+      propertyPath: 'players.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2127998401}
+    - target: {fileID: 122877765720794322, guid: 36ff61ce2d041074f962245c81bd2e86, type: 3}
+      propertyPath: 'players.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2123214785}
+    - target: {fileID: 122877765720794322, guid: 36ff61ce2d041074f962245c81bd2e86, type: 3}
+      propertyPath: 'players.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2123214785}
     - target: {fileID: 122877765720794322, guid: 36ff61ce2d041074f962245c81bd2e86, type: 3}
       propertyPath: 'healthCircles.Array.data[0]'
       value: 

@@ -8,7 +8,7 @@ using Brawlley; // Para usar o Image
 
 public class GameManager : MonoBehaviour
 {
-    private List<GameObject> players;
+    [SerializeField] private List<GameObject> players;
     [SerializeField] private float time = 60;
 
     // Referências para a UI
@@ -19,9 +19,22 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameOverScreen gameOverScreen;
 
+    private Dictionary<string, List<GameObject>> teams;
+
     private void Start()
     {
-        players = GameObject.FindGameObjectsWithTag("Player").ToList();
+        teams = new Dictionary<string, List<GameObject>>
+        {
+            { "Vermelho", new List<GameObject>() },
+            { "Azul", new List<GameObject>() },
+            { "Verde", new List<GameObject>() },
+            { "Amarelo", new List<GameObject>() }
+        };
+        foreach (GameObject player in players)
+        {
+            Player playerComponent = player.GetComponent<Player>();
+            teams[playerComponent.Team].Add(player);
+        }
 
         StartCoroutine(TimerCoroutine());
         UpdatePlayerLivesUI();
