@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI; // Para usar o Image
+using UnityEngine.UI;
+using Brawlley; // Para usar o Image
 
 public class GameManager : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<TMP_Text> playerLivesTexts; // Para mostrar as vidas de cada jogador
     [SerializeField] private Canvas uiCanvas; // Referência ao Canvas
     [SerializeField] private List<GameObject> healthCircles; // Lista para acompanhar os círculos de saúde de cada jogador
+
+    [SerializeField] private GameOverScreen gameOverScreen;
 
     private void Start()
     {
@@ -58,7 +61,7 @@ public class GameManager : MonoBehaviour
 
     private void HandleGameOver()
     {
-        Debug.Log("Game Over! O último jogador venceu.");
+        gameOverScreen.Setup(players[0].GetComponent<Player>().Team);
     }
 
     private void HandleTimeout()
