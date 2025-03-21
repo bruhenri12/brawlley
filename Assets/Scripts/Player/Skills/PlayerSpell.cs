@@ -16,7 +16,6 @@ namespace Brawlley
         [Header("Player Spell Data")]
         [SerializeField] float travelSpeed = 1f;
         [SerializeField] float verticalCastGravity = 0.5f;
-        private Vector2 attackDirection;
         #endregion
 
         #region MonoBehaviour Lifecycle Methods
@@ -27,17 +26,13 @@ namespace Brawlley
         #endregion
 
         #region Player Spell Methods
-        
-        public Vector2 AttackDirection { get => attackDirection; set => attackDirection = value; }
 
         public override void OnAttack(InputAction.CallbackContext context)
         {
             if (status == AttackStatus.Ready)
             {
-                
-
-                if (attackDirection == Vector2.zero)
-                    attackDirection.x = transform.localScale.x;
+                if (direction == Vector2.zero)
+                    direction.x = transform.localScale.x;
 
                 GameObject spellObject = Instantiate(spellPrefab, spellSpawnPoint.position, Quaternion.identity);
 
@@ -46,8 +41,9 @@ namespace Brawlley
                 spell.knockbackForce = knockbackForce;
                 spell.ignoreTeam = player.Team;
                 spell.speed = travelSpeed;
-                spell.direction = attackDirection;
-                spell.ApplyGravity(attackDirection.y > 0f ? verticalCastGravity : 0f);
+                spell.direction = direction;
+                spell.gravityScale = verticalCastGravity;
+                spell.ApplyGravity(direction.y > 0f ? verticalCastGravity : 0f);
                 spell.ApplyForce();
 
                 StartCooldown();

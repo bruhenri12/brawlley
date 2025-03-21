@@ -90,8 +90,9 @@ public class PlayerController : MonoBehaviour
         if (playerMovement != null) playerMovement.Direction = playerDirection.x;
         if (playerJump != null) playerJump.Direction = Mathf.Min(0, playerDirection.y);
         if (playerDash != null) playerDash.Direction = playerDirection.normalized;
-        if (playerMelee != null) playerMelee.AttackDirection = playerDirection;
-        if (playerSpell != null) playerSpell.AttackDirection = playerDirection;
+        if (playerMelee != null) playerMelee.Direction = playerDirection;
+        if (playerMelee != null) playerMelee.UpdateDirection(playerDirection.x);
+        if (playerSpell != null) playerSpell.Direction = playerDirection;
     }
 
     void OnAiming(InputAction.CallbackContext context)

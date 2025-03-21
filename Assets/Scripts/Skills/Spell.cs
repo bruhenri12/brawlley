@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 namespace Brawlley.Attacks
@@ -7,7 +8,7 @@ namespace Brawlley.Attacks
     {
         #region Resources
         [Header("Spell Resources")]
-        [SerializeField] Rigidbody2D spellRigidbody;
+        public Rigidbody2D spellRigidbody;
         #endregion
 
         #region Data
@@ -15,12 +16,13 @@ namespace Brawlley.Attacks
         public float speed = 1f;
         public float timeToActivate = 0.1f;
         public Vector2 direction;
-        [SerializeField] readonly float parriedProjectileVerticalSpeed = 0.6f;
-        [SerializeField] readonly float parriedProjectileHeight = 10f;
-        [SerializeField] readonly float parriedProjectileHorizontalSpeed = 2f;
+        [SerializeField] float parriedProjectileVerticalSpeed = 0.6f;
+        [SerializeField] float parriedProjectileHeight = 10f;
+        [SerializeField] float parriedProjectileHorizontalSpeed = 2f;
 
         private float parriedProjectileVelocity;
-        private float gravityScale;
+        public float gravityScale;
+        public Vector2 linearVelocity;
         private CircleCollider2D spellCollider;
         #endregion
 
@@ -31,16 +33,12 @@ namespace Brawlley.Attacks
             Invoke(nameof(ActivateCollision), timeToActivate);
         }
 
-        private void ActivateCollision()
-        {
-            spellCollider.enabled = true;
-        }
+        private void ActivateCollision() => spellCollider.enabled = true;
 
         private void ApplyGravity()
         {
             float gravity = -(2 * parriedProjectileHeight) / (parriedProjectileVerticalSpeed * parriedProjectileVerticalSpeed);
-            gravityScale = gravity / Physics2D.gravity.y;
-            spellRigidbody.gravityScale = gravityScale;
+            spellRigidbody.gravityScale = gravity / Physics2D.gravity.y;
 
             parriedProjectileVelocity = Mathf.Abs(gravity) * parriedProjectileVerticalSpeed;
         }
@@ -60,17 +58,19 @@ namespace Brawlley.Attacks
         public void Parry()
         {
             ApplyGravity();
+            linearVelocity = spellRigidbody.linearVelocity;
             spellRigidbody.linearVelocity = new Vector2(parriedProjectileHorizontalSpeed * direction.x, parriedProjectileVelocity);
         }
-        
-        public void Attack(Vector2 direction)
+
+        /* public void Attack(Vector2 direction)
         {
-            ApplyGravity(0.5f);
+            //ApplyGravity(0.5f);
+            //spellRigidbody.gravityScale = gravityScale;
             spellRigidbody.linearVelocity = direction;
             spellCollider.enabled = false;
             Invoke(nameof(ActivateCollision), timeToActivate);
 
-        }
+        } */
 
         //public virtual void OnPlayerCollisionDealKnockback()
         //{

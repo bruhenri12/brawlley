@@ -15,7 +15,7 @@ public class MagicBarrier : MonoBehaviour
         instantiationTime = Time.time;
     }
 
-    // Usando OnTriggerEnter2D para lidar com as colisões com Projéteis
+    // Usando OnTriggerEnter2D para lidar com as colisï¿½es com Projï¿½teis
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Spell spell = collision.gameObject.GetComponent<Spell>();
@@ -35,7 +35,7 @@ public class MagicBarrier : MonoBehaviour
         
     }
 
-    // Usando OnCollisionEnter2D para lidar com as colisões entre barreiras
+    // Usando OnCollisionEnter2D para lidar com as colisï¿½es entre barreiras
     private void OnCollisionEnter2D(Collision2D collision)
     {
         MagicBarrier otherObject = collision.gameObject.GetComponent<MagicBarrier>();

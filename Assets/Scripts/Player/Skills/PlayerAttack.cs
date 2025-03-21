@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 namespace Brawlley
 {
     public enum AttackStatus { Ready, Cooldown }
-    public enum AttackDirection { Left, Right }
+    public enum PlayerViewDirection { Left, Right }
 
     public abstract class PlayerAttack : MonoBehaviour
     {
@@ -23,7 +23,9 @@ namespace Brawlley
         [Tooltip("The time in seconds between each attack.")]
         [SerializeField] protected float cooldown = 1f;
         [SerializeField] protected AttackStatus status = AttackStatus.Ready;
-        [SerializeField] protected AttackDirection direction = AttackDirection.Right;
+        [SerializeField] protected PlayerViewDirection playerViewDirection = PlayerViewDirection.Right;
+        protected Vector2 direction;
+        public Vector2 Direction { get => direction; set => direction = value; }
         #endregion
 
         #region MonoBehaviour Lifecycle Methods
@@ -49,12 +51,12 @@ namespace Brawlley
             StartCoroutine(CooldownCoroutine());
         }
 
-        protected void UpdateDirection(float x)
+        public void UpdateDirection(float x)
         {
             if (x < 0)
-                direction = AttackDirection.Left;
+                playerViewDirection = PlayerViewDirection.Left;
             if (x > 0)
-                direction = AttackDirection.Right;
+                playerViewDirection = PlayerViewDirection.Right;
         }
         #endregion
     }

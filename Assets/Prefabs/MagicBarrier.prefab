@@ -209,7 +209,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4e34765ed71b9f4ebf8cf6af58fe979, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifetime: 5
+  lifetime: 1
   parryCollider: {fileID: 1193723882740255573}
   wallCollider: {fileID: 5601380905896790016}
   instantiationTime: 0

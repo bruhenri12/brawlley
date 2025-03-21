@@ -1,9 +1,11 @@
+using Brawlley;
 using Brawlley.Attacks;
 using UnityEngine;
 using UnityEngine.UI; // Ensure you have this for Image
 
 public class PlayerHurt : MonoBehaviour
 {
+    Player player;
     private PlayerHealth playerHealth;
     private Rigidbody2D playerRb;
     private GameManager gameManager;
@@ -14,6 +16,7 @@ public class PlayerHurt : MonoBehaviour
         playerRb = GetComponent<Rigidbody2D>();
         playerHealth = GetComponent<PlayerHealth>();
         gameManager = FindAnyObjectByType<GameManager>(); // Ensure this is correct for accessing the GameManager
+        player = GetComponent<Player>();
     }
 
     public void GetHit(Vector2 direction)
@@ -32,26 +35,29 @@ public class PlayerHurt : MonoBehaviour
         playerRb.linearVelocity = direction * playerHealth.Damage;
     }
 
-    // OnTriggerEnter2D é usado para lidar a colisão entre o player e o projétil (trigger)
+    // OnTriggerEnter2D ï¿½ usado para lidar a colisï¿½o entre o player e o projï¿½til (trigger)
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("WorldBounds")) { return; }
 
+        if (collision.CompareTag("Spell"))
+        {
+            Spell spell = collision.GetComponent<Spell>();
+            if (spell.ignoreTeam == player.Team) { return; }
+            Debug.Log("Apanhou Spell");
+            GetHit(spell.direction);
+            Destroy(collision.gameObject);
+        }
+        else if (collision.CompareTag("Melee"))
+        {
+            Melee meleeAttack = collision.GetComponent<Melee>();
+            if (meleeAttack.ignoreTeam == player.Team) { return; }
+            Debug.Log("Apanhou Melee");
+            if (meleeAttack.direction == Vector2.zero) { GetHit(new(meleeAttack.transform.localScale.x, 0)); return; }
+            GetHit(meleeAttack.direction);
+        }
         if (playerHurtbox.IsTouching(collision))
         {
-            if (collision.CompareTag("Spell"))
-            {
-                Spell spell = collision.GetComponent<Spell>();
-                GetHit(spell.direction);
-                Destroy(collision.gameObject);
-                Debug.Log("Apanhou");
-            }
-            else if (collision.CompareTag("Melee"))
-            {
-                PlayerMelee playerMelee = collision.transform.parent.GetComponent<PlayerMelee>();
-                if (playerMelee.AttackDirection == Vector2.zero) { GetHit(new(playerMelee.transform.localScale.x, 0)); return; }
-                GetHit(playerMelee.AttackDirection);
-            }
         }
         
     }
