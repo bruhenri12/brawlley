@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour
         int activePlayers = players.Count(p => p.activeSelf);
         if (activePlayers == 1)
         {
-            HandleGameOver();
+            HandleGameOver("Vitória do time " + players[0].GetComponent<Player>().Team + "!");
         }
     }
 
@@ -72,15 +72,39 @@ public class GameManager : MonoBehaviour
         HandleTimeout();
     }
 
-    private void HandleGameOver()
+    private void HandleGameOver(string gameOverMessage)
     {
-        gameOverScreen.Setup(players[0].GetComponent<Player>().Team);
+        gameOverScreen.Setup(gameOverMessage);
     }
 
     private void HandleTimeout()
     {
-        Debug.Log("Tempo esgotado!");
-        // Implementar lógica para finalizar o jogo
+        int maxLives = 0;
+        string winningTeam = "";
+        Dictionary<string, int> teamLives = new Dictionary<string, int>();
+
+        foreach (KeyValuePair<string, List<GameObject>> team in teams)
+        {
+            int totalLives = team.Value.Sum(p => p.GetComponent<PlayerHealth>().Lives);
+            teamLives[team.Key] = totalLives;
+
+            if (totalLives > maxLives)
+            {
+                maxLives = totalLives;
+                winningTeam = team.Key;
+            }
+        }
+
+        var topTeams = teamLives.Where(t => t.Value == maxLives).Select(t => t.Key).ToList();
+
+        if (topTeams.Count > 1)
+        {
+            HandleGameOver("Empate!");
+        }
+        else
+        {
+            HandleGameOver("Vitória do time " + winningTeam + "!");
+        }
     }
 
     public void HandlePlayerDamage(GameObject player, float damage)

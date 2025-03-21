@@ -6,10 +6,10 @@ using UnityEngine.SceneManagement;
 public class GameOverScreen : MonoBehaviour
 {
     public TMP_Text teamText;
-    public void Setup(string team)
+    public void Setup(string text)
     {
         gameObject.SetActive(true);
-        teamText.text = "Vitória do time " + team;
+        teamText.text = text;
     }
 
     public void RestartButton()
