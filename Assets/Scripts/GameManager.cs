@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI; // Para usar o Image
+using UnityEngine.UI;
+using Brawlley; // Para usar o Image
 
 public class GameManager : MonoBehaviour
 {
-    private List<GameObject> players;
+    [SerializeField] private List<GameObject> players;
     [SerializeField] private float time = 60;
 
     // Referências para a UI
@@ -16,9 +17,24 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Canvas uiCanvas; // Referência ao Canvas
     [SerializeField] private List<GameObject> healthCircles; // Lista para acompanhar os círculos de saúde de cada jogador
 
+    [SerializeField] private GameOverScreen gameOverScreen;
+
+    private Dictionary<string, List<GameObject>> teams;
+
     private void Start()
     {
-        players = GameObject.FindGameObjectsWithTag("Player").ToList();
+        teams = new Dictionary<string, List<GameObject>>
+        {
+            { "Vermelho", new List<GameObject>() },
+            { "Azul", new List<GameObject>() },
+            { "Verde", new List<GameObject>() },
+            { "Amarelo", new List<GameObject>() }
+        };
+        foreach (GameObject player in players)
+        {
+            Player playerComponent = player.GetComponent<Player>();
+            teams[playerComponent.Team].Add(player);
+        }
 
         StartCoroutine(TimerCoroutine());
         UpdatePlayerLivesUI();
@@ -39,7 +55,7 @@ public class GameManager : MonoBehaviour
         int activePlayers = players.Count(p => p.activeSelf);
         if (activePlayers == 1)
         {
-            HandleGameOver();
+            HandleGameOver("Vitória do time " + players[0].GetComponent<Player>().Team + "!");
         }
     }
 
@@ -56,15 +72,39 @@ public class GameManager : MonoBehaviour
         HandleTimeout();
     }
 
-    private void HandleGameOver()
+    private void HandleGameOver(string gameOverMessage)
     {
-        Debug.Log("Game Over! O último jogador venceu.");
+        gameOverScreen.Setup(gameOverMessage);
     }
 
     private void HandleTimeout()
     {
-        Debug.Log("Tempo esgotado!");
-        // Implementar lógica para finalizar o jogo
+        int maxLives = 0;
+        string winningTeam = "";
+        Dictionary<string, int> teamLives = new Dictionary<string, int>();
+
+        foreach (KeyValuePair<string, List<GameObject>> team in teams)
+        {
+            int totalLives = team.Value.Sum(p => p.GetComponent<PlayerHealth>().Lives);
+            teamLives[team.Key] = totalLives;
+
+            if (totalLives > maxLives)
+            {
+                maxLives = totalLives;
+                winningTeam = team.Key;
+            }
+        }
+
+        var topTeams = teamLives.Where(t => t.Value == maxLives).Select(t => t.Key).ToList();
+
+        if (topTeams.Count > 1)
+        {
+            HandleGameOver("Empate!");
+        }
+        else
+        {
+            HandleGameOver("Vitória do time " + winningTeam + "!");
+        }
     }
 
     public void HandlePlayerDamage(GameObject player, float damage)
