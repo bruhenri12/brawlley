@@ -16,18 +16,12 @@ namespace Brawlley
         [Header("Player Spell Data")]
         [SerializeField] float travelSpeed = 1f;
         [SerializeField] float verticalCastGravity = 0.5f;
-<<<<<<< HEAD
-=======
-        private Vector2 attackDirection;
-        private Animator playerAnim;
->>>>>>> dev-sprites
         #endregion
 
         #region MonoBehaviour Lifecycle Methods
         protected override void Start()
         {
             base.Start();
-            playerAnim = GetComponent<Animator>();
         }
         #endregion
 
@@ -39,8 +33,6 @@ namespace Brawlley
             {
                 if (direction == Vector2.zero)
                     direction.x = transform.localScale.x;
-
-                playerAnim.SetTrigger("CastTrigger");
 
                 GameObject spellObject = Instantiate(spellPrefab, spellSpawnPoint.position, Quaternion.identity);
 
