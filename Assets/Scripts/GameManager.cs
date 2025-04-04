@@ -8,6 +8,7 @@ using System.Collections;
 using TMPro;
 using System.Linq;
 using UnityEngine.XR;
+using Unity.Mathematics;
 
 public enum GameMode { v1, v2, FFA }
 public enum Map { Arena1, Arena2, Arena3, Volley }
@@ -31,8 +32,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] UIObjectContainer teamsUIContainer;
     int teamCount = 0;
 
+    [Header("Map Resources")]
+    [SerializeField] List<GameObject> maps = new();
+    [SerializeField] List<GameObject> spawnPointsObjects = new();
+
     [Header("Spawn Resources")]
-    [SerializeField] List<Transform> spawnPoints = new();
+    [SerializeField] List<Transform> spawnPoints;
 
     [Header("Timer Resources")]
     [SerializeField] TMP_Text timerText;
@@ -45,6 +50,7 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         GetGame();
+        DefineMap();
         DefineTeams();
         DefineTeamsUI();
         StartCoroutine(TimerCoroutine());
@@ -80,8 +86,8 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < playerCount; i++)
         {
-            
-            Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Count)];
+            int randomIndex = UnityEngine.Random.Range(0, spawnPoints.Count);
+            Transform spawnPoint = spawnPoints[randomIndex];
             playerPrefab.transform.position = spawnPoint.position;
             
             var player = PlayerInput.Instantiate(playerPrefab, controlScheme: controlSchemes[i], pairWithDevice: Keyboard.current, playerIndex: i);
@@ -90,7 +96,7 @@ public class GameManager : MonoBehaviour
             playerObject.playerName = $"Player {i}";
             playerObject.name = $"Player {i}";
             playerObject.spawnPoint = spawnPoint;
-            spawnPoints.Remove(spawnPoint);
+            spawnPoints.RemoveAt(randomIndex);
             players.Add(playerObject);
             Team team = teams[i % teamCount];
             playerObject.Team = team;
@@ -117,6 +123,20 @@ public class GameManager : MonoBehaviour
                 player.status.damageImage.color = Color.green;
             }
         }
+    }
+
+    public void DefineMap()
+    {
+        if (maps == null || maps.Count == 0)
+        {
+            Debug.LogError("No maps available to load!");
+            return;
+        }
+
+        int mapIndex = (int)map % maps.Count;
+        Instantiate(maps[mapIndex]);
+        Instantiate(spawnPointsObjects[mapIndex]);
+        spawnPoints = spawnPointsObjects[mapIndex].GetComponent<SpawnPoints>().spawnPoints;
     }
 
     

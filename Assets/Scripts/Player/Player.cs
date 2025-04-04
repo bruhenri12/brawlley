@@ -8,7 +8,7 @@ namespace Brawlley
         #region Player Resources
         [Header("Player Resources")]
         public string playerName = "Player";
-        [SerializeField] PlayerController playerController;
+        public PlayerController playerController;
         #endregion
 
         #region Player Data

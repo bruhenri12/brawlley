@@ -1,3 +1,4 @@
+using System;
 using Brawlley;
 using Brawlley.Attacks;
 using UnityEngine;
@@ -46,8 +47,7 @@ public class PlayerHurt : MonoBehaviour
             Melee meleeAttack = collision.GetComponent<Melee>();
             if (meleeAttack.ignoreTeam == player.Team.name) { return; }
             Debug.Log("Apanhou Melee");
-            if (meleeAttack.direction == Vector2.zero) { GetHit(new(meleeAttack.transform.localScale.x, 0), meleeAttack.damage, meleeAttack.knockbackForce); return; }
-            GetHit(meleeAttack.direction, meleeAttack.damage, meleeAttack.knockbackForce);
+            GetHit((playerRb.position - (Vector2)collision.transform.position).normalized, meleeAttack.damage, meleeAttack.knockbackForce);
         }
         if (playerHurtbox.IsTouching(collision))
         {
