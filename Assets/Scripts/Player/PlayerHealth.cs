@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour
 {
     [SerializeField] int playerLives = 3;
-    private float damage;
+    [SerializeField] float damage;
 
     private void Start()
     {

@@ -199,3 +199,8 @@ MonoBehaviour:
   speed: 1
   timeToActivate: 0.1
   direction: {x: 0, y: 0}
+  parriedProjectileVerticalSpeed: 0.6
+  parriedProjectileHeight: 10
+  parriedProjectileHorizontalSpeed: 2
+  gravityScale: 0
+  linearVelocity: {x: 0, y: 0}

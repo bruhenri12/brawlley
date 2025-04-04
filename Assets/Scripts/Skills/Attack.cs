@@ -32,7 +32,7 @@ namespace Brawlley.Attacks
             {
                 if (currentCollision.TryGetComponent<Player>(out var collidedPlayer))
                 {
-                    if (collidedPlayer.Team == ignoreTeam)
+                    if (collidedPlayer.Team.name == ignoreTeam)
                         return;
 
                     if (currentCollision.TryGetComponent<PlayerHealth>(out var playerHealth))

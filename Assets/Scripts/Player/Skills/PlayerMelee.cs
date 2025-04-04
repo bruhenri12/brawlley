@@ -6,9 +6,6 @@ namespace Brawlley
 {
     public class PlayerMelee : PlayerAttack
     {
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-
-        [SerializeField] bool canAttack = true;
         [SerializeField] Melee meleeAttack;
         [SerializeField] Riposte riposte;
         [SerializeField] float riposteForce = 1f;
@@ -18,21 +15,21 @@ namespace Brawlley
         {
             base.Start();
             playerAnim = GetComponent<Animator>();
-            canAttack = true;
         }
 
         public override void OnAttack(InputAction.CallbackContext context)
         {
-            if (context.started && canAttack)
+            if (context.started && status == AttackStatus.Ready)
             {
                 meleeAttack.direction = direction;
-                meleeAttack.ignoreTeam = player.Team;
-                //meleeAttack.damage = damage;
+                meleeAttack.ignoreTeam = player.Team.name;
+                meleeAttack.knockbackForce = knockbackForce;
+                meleeAttack.damage = damage;
                 riposte.horizontalDirection = playerViewDirection == PlayerViewDirection.Right ? 1f : -1f;
                 riposte.direction = direction;
                 riposte.force = riposteForce;
-                canAttack = false;
                 playerAnim.SetTrigger("MeleeTrigger");
+                StartCooldown();
             }
             
         }

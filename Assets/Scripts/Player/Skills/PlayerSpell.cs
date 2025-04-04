@@ -39,7 +39,7 @@ namespace Brawlley
                 Spell spell = spellObject.GetComponent<Spell>();
                 spell.damage = damage;
                 spell.knockbackForce = knockbackForce;
-                spell.ignoreTeam = player.Team;
+                spell.ignoreTeam = player.Team.name;
                 spell.speed = travelSpeed;
                 spell.direction = direction;
                 spell.gravityScale = verticalCastGravity;

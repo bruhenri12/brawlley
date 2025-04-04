@@ -1,65 +1,126 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using Brawlley;
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
-using Brawlley; // Para usar o Image
+using UnityEngine.InputSystem;
+using System.Collections;
+using TMPro;
+using System.Linq;
+using UnityEngine.XR;
 
+public enum GameMode { v1, v2, FFA }
+public enum Map { Arena1, Arena2, Arena3, Volley }
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> players;
-    [SerializeField] private float time = 60;
+    [Header("Game Resources")]
+    [SerializeField] GameData gameData;
+    [SerializeField] GameMode gameMode = GameMode.v1;
+    [SerializeField] Map map = Map.Arena1;
 
-    // Referências para a UI
-    [SerializeField] private TMP_Text timerText; // Para mostrar o tempo restante
-    [SerializeField] private List<TMP_Text> playerLivesTexts; // Para mostrar as vidas de cada jogador
-    [SerializeField] private Canvas uiCanvas; // Referência ao Canvas
-    [SerializeField] private List<GameObject> healthCircles; // Lista para acompanhar os círculos de saúde de cada jogador
+    [Header("Player Resources")]
+    [SerializeField] GameObject playerPrefab;
+    [SerializeField] List<Player> players = new();
+    int playerCount = 0;
 
-    [SerializeField] private GameOverScreen gameOverScreen;
+    [Header("Control Resources")]
+    [SerializeField] List<string> controlSchemes = new();
 
-    private Dictionary<string, List<GameObject>> teams;
+    [Header("Team Resources")]
+    [SerializeField] List<Team> teams = new();
+    [SerializeField] UIObjectContainer teamsUIContainer;
+    int teamCount = 0;
 
-    private void Start()
+    [Header("Spawn Resources")]
+    [SerializeField] List<Transform> spawnPoints = new();
+
+    [Header("Timer Resources")]
+    [SerializeField] TMP_Text timerText;
+    [SerializeField, Tooltip("Time in seconds")] float time = 60f;
+
+    [Header("Game Over Resources")]
+    [SerializeField] GameOverScreen gameOver;
+
+    #region Methods
+    void Awake()
     {
-        teams = new Dictionary<string, List<GameObject>>
-        {
-            { "Vermelho", new List<GameObject>() },
-            { "Azul", new List<GameObject>() },
-            { "Verde", new List<GameObject>() },
-            { "Amarelo", new List<GameObject>() }
-        };
-        foreach (GameObject player in players)
-        {
-            Player playerComponent = player.GetComponent<Player>();
-            teams[playerComponent.Team].Add(player);
-        }
-
+        GetGame();
+        DefineTeams();
+        DefineTeamsUI();
         StartCoroutine(TimerCoroutine());
-        UpdatePlayerLivesUI();
-        UpdateHealthCircleUI();
     }
-
-    private void HandlePlayerElimination(GameObject eliminatedPlayer)
+    public void GetGame()
     {
-        eliminatedPlayer.SetActive(false);
-        players.Remove(eliminatedPlayer);
-        UpdatePlayerLivesUI();
-        UpdateHealthCircleUI();
-        CheckGameOver();
+        gameMode = gameData.gameMode;
+        map = gameData.map;
     }
-
-    private void CheckGameOver()
+    public void DefineTeams()
     {
-        int activePlayers = players.Count(p => p.activeSelf);
-        if (activePlayers == 1)
+        switch (gameMode)
         {
-            HandleGameOver("Vitória do time " + players[0].GetComponent<Player>().Team + "!");
+            case GameMode.v1:
+                playerCount = 2;
+                teamCount = 2;
+                break;
+
+            case GameMode.v2:
+                playerCount = 4;
+                teamCount = 2;
+                break;
+
+            case GameMode.FFA:
+                playerCount = 4;
+                teamCount = 4;
+                break;
+
+            default:
+                Debug.LogError("Unsupported game mode!");
+                break;
+        }
+
+        for (int i = 0; i < playerCount; i++)
+        {
+            
+            Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Count)];
+            playerPrefab.transform.position = spawnPoint.position;
+            
+            var player = PlayerInput.Instantiate(playerPrefab, controlScheme: controlSchemes[i], pairWithDevice: Keyboard.current, playerIndex: i);
+            
+            Player playerObject = player.gameObject.GetComponent<Player>();
+            playerObject.playerName = $"Player {i}";
+            playerObject.name = $"Player {i}";
+            playerObject.spawnPoint = spawnPoint;
+            spawnPoints.Remove(spawnPoint);
+            players.Add(playerObject);
+            Team team = teams[i % teamCount];
+            playerObject.Team = team;
+            team.players.Add(playerObject);
+            team.playersAlive++;
         }
     }
 
-    private IEnumerator TimerCoroutine()
+    public void DefineTeamsUI()
+    {
+        for (int i = 0; i < teamCount; i++)
+        {
+            Team team = teams[i];
+            GameObject teamUI = teamsUIContainer.AddObject();
+            teamUI.name = team.name;
+            UIObjectContainer playersUIContainer = teamUI.GetComponent<UIObjectContainer>();
+            foreach (Player player in team.players)
+            {
+                GameObject playerUI = playersUIContainer.AddObject();
+                playerUI.name = player.name;
+                player.status = playerUI.GetComponent<PlayerStatus>();
+                player.status.playerName.text = player.playerName;
+                player.status.lives.text = player.GetComponent<PlayerHealth>().Lives.ToString();
+                player.status.damageImage.color = Color.green;
+            }
+        }
+    }
+
+    
+    IEnumerator TimerCoroutine()
     {
         while (time > 0)
         {
@@ -72,114 +133,168 @@ public class GameManager : MonoBehaviour
         HandleTimeout();
     }
 
-    private void HandleGameOver(string gameOverMessage)
+    void HandleTimeout()
     {
-        gameOverScreen.Setup(gameOverMessage);
-    }
+        Debug.Log("Time's up!");
 
-    private void HandleTimeout()
-    {
-        int maxLives = 0;
-        string winningTeam = "";
-        Dictionary<string, int> teamLives = new Dictionary<string, int>();
+        List<Team> winningTeams = new();
+        int maxPlayersAlive = -1;
 
-        foreach (KeyValuePair<string, List<GameObject>> team in teams)
+        // Determine the teams with the most players alive
+        for (int i = 0; i < teamCount; i++)
         {
-            int totalLives = team.Value.Sum(p => p.GetComponent<PlayerHealth>().Lives);
-            teamLives[team.Key] = totalLives;
-
-            if (totalLives > maxLives)
+            Team team = teams[i];
+            int playersAlive = team.playersAlive;
+            if (playersAlive > maxPlayersAlive)
             {
-                maxLives = totalLives;
-                winningTeam = team.Key;
+                maxPlayersAlive = playersAlive;
+                winningTeams.Clear();
+                winningTeams.Add(team);
+            }
+            else if (playersAlive == maxPlayersAlive)
+            {
+                winningTeams.Add(team);
             }
         }
 
-        var topTeams = teamLives.Where(t => t.Value == maxLives).Select(t => t.Key).ToList();
-
-        if (topTeams.Count > 1)
+        // If there's a tie, compare total lives
+        if (winningTeams.Count > 1)
         {
-            HandleGameOver("Empate!");
+            int maxLives = 0;
+            List<Team> tiedTeams = new();
+
+            foreach (Team team in winningTeams)
+            {
+                int totalLives = team.players.Sum(player => player.GetComponent<PlayerHealth>().Lives);
+                if (totalLives > maxLives)
+                {
+                    maxLives = totalLives;
+                    tiedTeams.Clear();
+                    tiedTeams.Add(team);
+                }
+                else if (totalLives == maxLives)
+                {
+                    tiedTeams.Add(team);
+                }
+            }
+
+            winningTeams = tiedTeams;
+
+            // If there's still a tie, compare total damage
+            if (winningTeams.Count > 1)
+            {
+                float minDamage = float.MaxValue;
+                List<Team> finalWinners = new();
+
+                foreach (Team team in winningTeams)
+                {
+                    float totalDamage = team.players.Sum(player => player.GetComponent<PlayerHealth>().Damage);
+                    if (totalDamage < minDamage)
+                    {
+                        minDamage = totalDamage;
+                        finalWinners.Clear();
+                        finalWinners.Add(team);
+                    }
+                    else if (totalDamage == minDamage)
+                    {
+                        finalWinners.Add(team);
+                    }
+                }
+
+                winningTeams = finalWinners;
+            }
+        }
+
+        // Announce the results
+        if (winningTeams.Count == 1)
+        {
+            HandleResults(winningTeams[0]);
         }
         else
         {
-            HandleGameOver("Vitória do time " + winningTeam + "!");
+            HandleResults(winningTeams);
         }
     }
 
-    public void HandlePlayerDamage(GameObject player, float damage)
+    void HandleResults(Team team)
     {
-        PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
-        UpdateHealthCircleUI();
+        Debug.Log("Game Over!");
+        string message = $"The winner is <i> {team.name} </i> with <i> {team.playersAlive} </i> players alive!";
+        if (gameMode == GameMode.FFA)
+        {
+            message = $"The winner is <i> {team.players[0].name} </i>!";
+        }
+        gameOver.Setup(message);
     }
 
-    public void HandlePlayerDeath(GameObject player, int lives)
+    void HandleResults(List<Team> teams)
     {
+        Debug.Log("Game Over!");
+        string message;
+        if (gameMode == GameMode.FFA)
+        {
+            message = "It's a tie between the following players:";
+            foreach (Team team in teams)
+            {
+                message += $"\n<i> {team.players[0].name} </i>";
+            }
+            gameOver.Setup(message);
+            return;
+        }
+        else
+        {
+            message = "It's a tie between the following teams: ";
+            foreach (Team team in teams)
+            {
+                message += $"\n<i> {team.name} </i>";
+            }
+        }
+        gameOver.Setup(message);
+    }
+
+    Team StandingTeam()
+    {
+        Team standingTeam = null;
+        for (int i = 0; i < teamCount; i++)
+        {
+            if (teams[i].playersAlive > 0)
+            {
+                if (standingTeam == null)
+                    standingTeam = teams[i];
+                else
+                    return null; // More than one team is standing
+            }
+        }
+        return standingTeam;
+    }
+
+    public void HandlePlayerDamage(Player player, float damage)
+    {
+        float t = Mathf.Clamp01( damage / (4 * 10f) ); // Assuming max damage is 4 times the damage taken
+        player.status.damageImage.color = Color.Lerp(Color.green, Color.red, t);
+    }
+
+    public void HandlePlayerDeath(Player player, int lives)
+    {
+        player.status.lives.text = lives.ToString();
         if (lives <= 0)
         {
-            HandlePlayerElimination(player);
-        }
-        UpdatePlayerLivesUI();
-        UpdateHealthCircleUI();
-    }
-    private void UpdatePlayerLivesUI()
-    {
-        for (int i = 0; i < playerLivesTexts.Count; i++)
-        {
-            if (i < players.Count && players[i].activeSelf)
+            player.gameObject.SetActive(false);
+            //player.status.gameObject.SetActive(false);
+            player.Team.playersAlive--;
+            if (player.Team.playersAlive <= 0)
             {
-                PlayerHealth playerHealth = players[i].GetComponent<PlayerHealth>();
-                if (playerLivesTexts[i] != null) // Check if the text object is not null
+                player.Team.playersAlive = 0;
+                // Handle team elimination
+                Debug.Log($"{player.Team.name} has been eliminated!");
+
+                Team standingTeam = StandingTeam();
+                if (standingTeam != null)
                 {
-                    playerLivesTexts[i].text = playerHealth.Lives.ToString();
-                    playerLivesTexts[i].gameObject.SetActive(true);
-                }
-            }
-            else
-            {
-                if (playerLivesTexts[i] != null) // Check if the text object is not null
-                {
-                    playerLivesTexts[i].gameObject.SetActive(false);
+                    HandleResults(standingTeam);
                 }
             }
         }
     }
-
-    private void UpdateHealthCircleUI()
-    {
-        for (int i = 0; i < healthCircles.Count; i++)
-        {
-            if (i < players.Count && players[i].activeSelf)
-            {
-                PlayerHealth playerHealth = players[i].GetComponent<PlayerHealth>();
-                if (healthCircles[i] != null)
-                {
-                    float t = playerHealth.Damage / (4 * 10f); // Assuming 10 is the damage threshold for full red
-                    t = Mathf.Clamp01(t); // Ensure t is between 0 and 1
-                    Color color = Color.Lerp(Color.green, Color.red, t);
-                    healthCircles[i].GetComponent<Image>().color = color;
-                    healthCircles[i].gameObject.SetActive(true);
-                }
-            }
-            else
-            {
-                if (healthCircles[i] != null)
-                {
-                    healthCircles[i].gameObject.SetActive(false);
-                }
-            }
-        }
-    }
-
-    public Image GetHealthCircleImage(GameObject player)
-    {
-        int index = players.IndexOf(player);
-        if (index >= 0 && index < healthCircles.Count)
-        {
-            return healthCircles[index].GetComponent<Image>();
-        }
-        return null;
-    }
-
-
+    #endregion
 }

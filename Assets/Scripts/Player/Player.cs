@@ -7,13 +7,16 @@ namespace Brawlley
     {
         #region Player Resources
         [Header("Player Resources")]
+        public string playerName = "Player";
         [SerializeField] PlayerController playerController;
         #endregion
 
         #region Player Data
         [Header("Player Data")]
-        [SerializeField] string team;
-        public string Team { get => team; set => team = value; }
+        [SerializeField] Team team;
+        public Team Team { get => team; set => team = value; }
+        public Transform spawnPoint;
+        public PlayerStatus status;
 
         //public GameInputs GameInputs => playerController.GameInputs;
         #endregion
