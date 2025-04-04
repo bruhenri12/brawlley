@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Components")]
 
     private Rigidbody2D playerRb;
+    private Animator playerAnim;
     PlayerSurfaceDetection surfaceDetector;
 
     [Header("Movement Stats")]
@@ -44,6 +45,7 @@ public class PlayerMovement : MonoBehaviour
     {
         //Find the character's Rigidbody and ground detection script
         playerRb = GetComponent<Rigidbody2D>();
+        playerAnim = GetComponent<Animator>();
         surfaceDetector = GetComponent<PlayerSurfaceDetection>();
     }
 
@@ -70,6 +72,9 @@ public class PlayerMovement : MonoBehaviour
         onGround = surfaceDetector.GetOnGround();
         onWall = surfaceDetector.GetOnWall();
         velocity = playerRb.linearVelocity;
+
+        playerAnim.SetFloat("Speed", Mathf.Abs(velocity.x));
+        playerAnim.SetFloat("VerticalSpeed", velocity.y);
 
         RunWithAcceleration();
     }

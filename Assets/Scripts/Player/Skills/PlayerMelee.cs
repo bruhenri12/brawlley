@@ -9,7 +9,11 @@ namespace Brawlley
         [SerializeField] Melee meleeAttack;
         [SerializeField] Riposte riposte;
         [SerializeField] float riposteForce = 1f;
+<<<<<<< HEAD
         Animator playerAnim; 
+=======
+        Animator playerAnim;
+>>>>>>> dev-sprites
 
         protected override void Start()
         {
@@ -31,7 +35,11 @@ namespace Brawlley
                 playerAnim.SetTrigger("MeleeTrigger");
                 StartCooldown();
             }
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> dev-sprites
         }
     }
 }

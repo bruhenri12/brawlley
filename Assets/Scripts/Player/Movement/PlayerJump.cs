@@ -7,6 +7,7 @@ public class PlayerJump : MonoBehaviour
 {
     [Header("Components")]
     private Rigidbody2D playerRb;
+    private Animator playerAnim;
     private PlayerSurfaceDetection surfaceDetector;
     private PlayerDash dash;
 
@@ -40,6 +41,7 @@ public class PlayerJump : MonoBehaviour
     void Start()
     {
         playerRb = GetComponent<Rigidbody2D>();
+        playerAnim = GetComponent<Animator>();
         surfaceDetector = GetComponent<PlayerSurfaceDetection>();
         dash = GetComponent<PlayerDash>();
         HandleJumpPhysics();
@@ -82,6 +84,7 @@ public class PlayerJump : MonoBehaviour
         }
 
         playerRb.linearVelocityY = jumpSpeed;
+        playerAnim.SetTrigger("JumpTrigger");
 
         JumpsRemaining--;
     }
