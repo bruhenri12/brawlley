@@ -2,53 +2,36 @@ using Brawlley.Attacks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerMelee : MonoBehaviour
+namespace Brawlley
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-
-    private Vector2 attackDirection;
-    private Animator playerAnim; 
-    [SerializeField] bool canAttack = true;
-    [SerializeField] float meleeModifier = 1f;
-    [SerializeField] CapsuleCollider2D meleeProjectileCollider;
-
-    public Vector2 AttackDirection { get => attackDirection; set => attackDirection = value; }
-
-    public void OnAttack(InputAction.CallbackContext context)
+    public class PlayerMelee : PlayerAttack
     {
-        if (context.started && canAttack)
+        [SerializeField] Melee meleeAttack;
+        [SerializeField] Riposte riposte;
+        [SerializeField] float riposteForce = 1f;
+        Animator playerAnim;
+
+        protected override void Start()
         {
-            canAttack = false;
-            playerAnim.SetTrigger("MeleeTrigger");
+            base.Start();
+            playerAnim = GetComponent<Animator>();
         }
-        
-    }
 
-    void Start()
-    {
-        playerAnim = GetComponent<Animator>();
-        canAttack = true;
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if(collision.CompareTag("Spell"))
+        public override void OnAttack(InputAction.CallbackContext context)
         {
-            if (meleeProjectileCollider.IsTouching(collision))
+            if (context.started && status == AttackStatus.Ready)
             {
-                Debug.Log("Rebateu");   
-                Spell spell = collision.GetComponent<Spell>();
-                if (attackDirection == Vector2.zero)
-                {
-                    Debug.Log("Rebateu paradodo");  
-                    spell.Attack(new Vector2(transform.localScale.x, -1) * meleeModifier);
-                }
-                else
-                {
-                    spell.Attack(attackDirection * meleeModifier);
-                }
-                return;
+                meleeAttack.direction = direction;
+                meleeAttack.ignoreTeam = player.Team.name;
+                meleeAttack.knockbackForce = knockbackForce;
+                meleeAttack.damage = damage;
+                riposte.horizontalDirection = playerViewDirection == PlayerViewDirection.Right ? 1f : -1f;
+                riposte.direction = direction;
+                riposte.force = riposteForce;
+                playerAnim.SetTrigger("MeleeTrigger");
+                StartCooldown();
             }
+
         }
     }
 }
