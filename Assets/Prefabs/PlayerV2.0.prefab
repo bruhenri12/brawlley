@@ -554,7 +554,7 @@ GameObject:
   - component: {fileID: 8207572651829832648}
   - component: {fileID: 2892239181610429278}
   - component: {fileID: 705487606124041895}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: RiposteHitbox
   m_TagString: Melee
   m_Icon: {fileID: 0}
@@ -589,7 +589,7 @@ CapsuleCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
