@@ -278,6 +278,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 122877765720794322, guid: 36ff61ce2d041074f962245c81bd2e86, type: 3}
+      propertyPath: time
+      value: 999
+      objectReference: {fileID: 0}
+    - target: {fileID: 122877765720794322, guid: 36ff61ce2d041074f962245c81bd2e86, type: 3}
       propertyPath: gameData
       value: 
       objectReference: {fileID: 11400000, guid: 5ee2bd47864d6c549bec6bfb17ae1dd3, type: 2}
