@@ -11,6 +11,7 @@ public class PlayerSurfaceDetection : MonoBehaviour
     private Vector3 groundOffset;
     private Vector3 wallOffset;
     private Rigidbody2D playerRb;
+    private Animator playerAnim;
     [SerializeField] private BoxCollider2D playerCollider;
     [SerializeField] private Vector2 colliderSizeGround = new(1,1);
     [SerializeField] private Vector2 colliderSizeAir = new (0.6f, 0.6f);
@@ -29,6 +30,7 @@ public class PlayerSurfaceDetection : MonoBehaviour
     private void Awake()
     {
         playerRb = GetComponent<Rigidbody2D>();
+        playerAnim = GetComponent<Animator>();
 
         groundOffset = new Vector3(colliderOffset.x, 0, 0);
         wallOffset = new Vector3(0, colliderOffset.y, 0);
@@ -47,6 +49,8 @@ public class PlayerSurfaceDetection : MonoBehaviour
         onGround = Physics2D.Raycast(transform.position + groundOffset, Vector2.down, groundLength, groundLayer) || Physics2D.Raycast(transform.position - groundOffset, Vector2.down, groundLength, groundLayer);
         onWall = Physics2D.Raycast(transform.position + wallOffset, facingDirection, wallLength, groundLayer) || Physics2D.Raycast(transform.position - wallOffset, facingDirection, wallLength, groundLayer);
 
+        playerAnim.SetBool("OnWall", onWall);
+
         if (onGround != previousGroundCheck)
         {
             previousGroundCheck = onGround;
@@ -55,11 +59,13 @@ public class PlayerSurfaceDetection : MonoBehaviour
                 previousVelocity = playerRb.linearVelocityX;
                 playerCollider.size = colliderSizeGround;
                 playerCollider.edgeRadius = colliderRadiusGround;
+                playerAnim.SetBool("OnGround", true);
             }
             else
             {
                 playerCollider.size = colliderSizeAir;
                 playerCollider.edgeRadius = colliderRadiusAir;
+                playerAnim.SetBool("OnGround", false);  
             }
         }
     }

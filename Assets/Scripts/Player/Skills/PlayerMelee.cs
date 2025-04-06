@@ -16,22 +16,36 @@ namespace Brawlley
             base.Start();
             playerAnim = GetComponent<Animator>();
         }
-
-        public override void OnAttack(InputAction.CallbackContext context)
+        public void PrepareAttack(InputAction.CallbackContext context)
         {
-            if (context.started && status == AttackStatus.Ready)
-            {
-                meleeAttack.direction = direction;
-                meleeAttack.ignoreTeam = player.Team.name;
-                meleeAttack.knockbackForce = knockbackForce;
-                meleeAttack.damage = damage;
-                riposte.horizontalDirection = playerViewDirection == PlayerViewDirection.Right ? 1f : -1f;
-                riposte.direction = direction;
-                riposte.force = riposteForce;
-                playerAnim.SetTrigger("MeleeTrigger");
-                StartCooldown();
-            }
+            playerAnim.SetTrigger("MeleeStartTrigger");
 
         }
+        public override void OnAttack(InputAction.CallbackContext context)
+        {
+            if (context.canceled)
+            {
+                playerAnim.SetBool("MeleeAttack", true);
+                if (status == AttackStatus.Ready)
+                {
+                    meleeAttack.direction = direction;
+                    meleeAttack.ignoreTeam = player.Team.name;
+                    meleeAttack.knockbackForce = knockbackForce;
+                    meleeAttack.damage = damage;
+                    riposte.horizontalDirection = playerViewDirection == PlayerViewDirection.Right ? 1f : -1f;
+                    riposte.direction = direction;
+                    riposte.force = riposteForce;
+
+                    StartCooldown();
+                }
+            } 
+            
+        }
+
+        public void ResetMeleeAttack()
+        {
+            playerAnim.SetBool("MeleeAttack", false);
+        }
+
     }
 }

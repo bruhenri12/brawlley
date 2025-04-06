@@ -1,49 +1,66 @@
-using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine;
 
 public class PlayerDash : MonoBehaviour
 {
     [Header("Dash Settings")]
-    public float dashSpeed = 15f;  // Speed of the dash
-    public float dashDuration = 0.2f;  // How long the dash lasts
-    public float dashCooldown = 0.5f;  // Time before another dash is allowed
+    public float dashSpeed = 15f;
+    public float dashDuration = 0.2f;
+    public float dashCooldown = 0.5f;
 
     private Rigidbody2D playerRb;
+    private Animator playerAnim;
     private bool isDashing;
     private bool canDash = true;
 
     private Vector2 dashDirection;
     private Vector2 inputDirection;
-    private float dashTime;
+    private float dashEndTime;
+    private float dashCooldownEndTime;
+
     private PlayerSurfaceDetection surfaceDetector;
 
     public Vector2 Direction { set => inputDirection = value; }
     public bool IsDashing { get => isDashing; }
     public bool GravityCancel { get => isDashing && dashDirection == Vector2.zero; }
-    
+
     public void OnDash(InputAction.CallbackContext context)
     {
-        if (isDashing || !canDash) return;
+        if (!canDash || isDashing) return;
 
         if (context.started)
         {
             StartDash(inputDirection);
+            playerAnim.SetTrigger("DashTrigger");
+            playerAnim.ResetTrigger("EndDashTrigger");
         }
-        
     }
+
     void Start()
     {
         playerRb = GetComponent<Rigidbody2D>();
+        playerAnim = GetComponent<Animator>();
         surfaceDetector = GetComponent<PlayerSurfaceDetection>();
-        
     }
-
 
     void FixedUpdate()
     {
         if (isDashing)
         {
-            playerRb.linearVelocity = dashDirection * dashSpeed;
+            if (Time.time >= dashEndTime)
+            {
+                EndDash();
+            }
+            else
+            {
+                playerRb.linearVelocity = dashDirection * dashSpeed;
+            }
+        }
+
+        // Atualiza se pode ou não dar dash novamente
+        if (!canDash && Time.time >= dashCooldownEndTime)
+        {
+            canDash = true;
         }
     }
 
@@ -52,25 +69,24 @@ public class PlayerDash : MonoBehaviour
         isDashing = true;
         canDash = false;
         dashDirection = direction;
-        dashTime = dashDuration;
+        dashEndTime = Time.time + dashDuration;
+        dashCooldownEndTime = Time.time + dashCooldown;
 
-        // Disable gravity during dash for a smooth effect
         playerRb.gravityScale = 0;
+    }
 
-        Invoke(nameof(EndDash), dashDuration);
-        Invoke(nameof(ResetDashCooldown), dashCooldown);
+    public void ExtendDash(float extraTime)
+    {
+        if (isDashing)
+        {
+            dashEndTime += extraTime;
+        }
     }
 
     private void EndDash()
     {
         isDashing = false;
-        playerRb.gravityScale = 1;  // Restore gravity
+        playerRb.gravityScale = 1;
+        playerAnim.SetTrigger("EndDashTrigger");
     }
-
-    private void ResetDashCooldown()
-    {
-        canDash = true;
-    }
-
-    
 }

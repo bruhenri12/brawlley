@@ -53,12 +53,17 @@ public class PlayerController : MonoBehaviour
         playerInput.actions["Jump"].started += playerJump.OnJump;
         playerInput.actions["Dash"].started += playerDash.OnDash;
 
+        playerInput.actions["Spell"].started += playerSpell.PrepareAttack;
         playerInput.actions["Spell"].started += OnAiming;
         playerInput.actions["Spell"].canceled += OnStopAiming;
         playerInput.actions["Spell"].canceled += playerSpell.OnAttack;
 
         playerInput.actions["Parry"].started += playerParry.OnParry;
-        playerInput.actions["Melee"].started += playerMelee.OnAttack;
+
+        playerInput.actions["Melee"].started += OnAiming;
+        playerInput.actions["Melee"].started += playerMelee.PrepareAttack;
+        playerInput.actions["Melee"].canceled += OnStopAiming;
+        playerInput.actions["Melee"].canceled += playerMelee.OnAttack;
 
         // Debugging control schemes
         Debug.Log($"{gameObject.name} using {playerInput.currentControlScheme}");
@@ -77,7 +82,11 @@ public class PlayerController : MonoBehaviour
         playerInput.actions["Spell"].canceled -= playerSpell.OnAttack;
 
         playerInput.actions["Parry"].started -= playerParry.OnParry;
-        playerInput.actions["Melee"].started -= playerMelee.OnAttack;
+
+        playerInput.actions["Melee"].started -= playerMelee.PrepareAttack;
+        playerInput.actions["Melee"].started -= OnAiming;
+        playerInput.actions["Melee"].canceled -= OnStopAiming;
+        playerInput.actions["Melee"].canceled -= playerMelee.OnAttack;
 
         playerInput.actions.Disable();
     }
@@ -87,8 +96,7 @@ public class PlayerController : MonoBehaviour
     void SetDirection(InputAction.CallbackContext context)
     {
         playerDirection = context.ReadValue<Vector2>();
-        if (playerMovement != null) playerMovement.Direction = playerDirection.x;
-        if (playerJump != null) playerJump.Direction = Mathf.Min(0, playerDirection.y);
+        if (playerMovement != null) playerMovement.Direction = new(playerDirection.x, Mathf.Min(0, playerDirection.y));
         if (playerDash != null) playerDash.Direction = playerDirection.normalized;
         if (playerMelee != null) playerMelee.Direction = playerDirection;
         if (playerMelee != null) playerMelee.UpdateDirection(playerDirection.x);
@@ -97,6 +105,16 @@ public class PlayerController : MonoBehaviour
 
     void OnAiming(InputAction.CallbackContext context)
     {
+        DisableMovement();
+    }
+
+    void OnStopAiming(InputAction.CallbackContext context)
+    {
+        EnableMovement();
+    }
+
+    public void DisableMovement()
+    {
         playerMovement.CanMove = false;
         playerInput.actions["Jump"].started -= playerJump.OnJump;
         playerInput.actions["Dash"].started -= playerDash.OnDash;
@@ -104,7 +122,7 @@ public class PlayerController : MonoBehaviour
         playerInput.actions["Melee"].started -= playerMelee.OnAttack;
     }
 
-    void OnStopAiming(InputAction.CallbackContext context)
+    public void EnableMovement()
     {
         playerMovement.CanMove = true;
         playerInput.actions["Jump"].started += playerJump.OnJump;

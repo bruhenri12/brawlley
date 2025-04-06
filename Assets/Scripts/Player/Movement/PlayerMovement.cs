@@ -18,13 +18,14 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField, Range(0f, 100f)][Tooltip("How fast to reach max speed when in mid-air")] public float maxAirAcceleration;
     [SerializeField, Range(0f, 100f)][Tooltip("How fast to stop in mid-air when no direction is used")] public float maxAirDeceleration;
     [SerializeField, Range(0f, 100f)][Tooltip("How fast to stop when changing direction when in mid-air")] public float maxAirTurnSpeed = 80f;
+    [SerializeField, Range(1f, 5f)] private float fallingSpeedModifier = 2;
     [SerializeField][Tooltip("Friction to apply against movement on stick")] private float friction;
 
     [Header("Options")]
     [Tooltip("When false, the charcter will skip acceleration and deceleration and instantly move and stop")] public bool useAcceleration;
 
     [Header("Calculations")]
-    public float directionX;
+    public Vector2 direction;
     private Vector2 desiredVelocity;
     public Vector2 velocity;
     private float maxSpeedChange;
@@ -39,7 +40,7 @@ public class PlayerMovement : MonoBehaviour
     private bool canMove = true;
 
     public bool CanMove { get => canMove; set => canMove = value; }
-    public float Direction { set => directionX = value; }
+    public Vector2 Direction { set => direction = value; }
 
     private void Awake()
     {
@@ -51,9 +52,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (directionX != 0)
+        if (direction.x != 0)
         {
-            transform.localScale = new Vector3(directionX > 0 ? 1 : -1, 1, 1);
+            transform.localScale = new Vector3(direction.x > 0 ? 1 : -1, 1, 1);
             pressingKey = true;
         }
         else
@@ -63,7 +64,7 @@ public class PlayerMovement : MonoBehaviour
 
         //Calculate's the character's desired velocity - which is the direction you are facing, multiplied by the character's maximum speed
         //Friction is not used in this game
-        desiredVelocity = new Vector2(directionX, 0f) * Mathf.Max(maxSpeed - friction, 0f);
+        desiredVelocity = new Vector2(direction.x, 0f) * Mathf.Max(maxSpeed - friction, 0f);
 
     }
 
@@ -72,9 +73,10 @@ public class PlayerMovement : MonoBehaviour
         onGround = surfaceDetector.GetOnGround();
         onWall = surfaceDetector.GetOnWall();
         velocity = playerRb.linearVelocity;
+        
 
-        playerAnim.SetFloat("Speed", Mathf.Abs(velocity.x));
-        playerAnim.SetFloat("VerticalSpeed", velocity.y);
+        playerAnim.SetFloat("AnimMoveX", Mathf.Abs(velocity.x));
+        playerAnim.SetFloat("AnimMoveY", velocity.y);
 
         RunWithAcceleration();
     }
@@ -87,27 +89,29 @@ public class PlayerMovement : MonoBehaviour
         deceleration = onGround ? maxDecceleration : maxAirDeceleration;
         turnSpeed = onGround ? maxTurnSpeed : maxAirTurnSpeed;
 
-        if (pressingKey && canMove)
+        if (canMove)
         {
-            //If the sign (i.e. positive or negative) of our input direction doesn't match our movement, it means we're turning around and so should use the turn speed stat.
-            if (Mathf.Sign(directionX) != Mathf.Sign(velocity.x))
+            playerRb.linearVelocityY += direction.y * fallingSpeedModifier;
+
+            if (pressingKey)
             {
-                maxSpeedChange = turnSpeed * Time.deltaTime;
+                //If the sign (i.e. positive or negative) of our input direction doesn't match our movement, it means we're turning around and so should use the turn speed stat.
+                if (Mathf.Sign(direction.x) != Mathf.Sign(velocity.x))
+                {
+                    maxSpeedChange = turnSpeed * Time.deltaTime;
+                }
+                else
+                {
+                    //If they match, it means we're simply running along and so should use the acceleration stat
+                    maxSpeedChange = acceleration * Time.deltaTime;
+                }
             }
             else
             {
-                //If they match, it means we're simply running along and so should use the acceleration stat
-                maxSpeedChange = acceleration * Time.deltaTime;
+                //And if we're not pressing a direction at all, use the deceleration stat
+                maxSpeedChange = deceleration * Time.deltaTime;
             }
         }
-        else
-        {
-            //And if we're not pressing a direction at all, use the deceleration stat
-            maxSpeedChange = deceleration * Time.deltaTime;
-        }
-
-        //Move our velocity towards the desired velocity, at the rate of the number calculated above
-        
 
         if (!onWall)
         {

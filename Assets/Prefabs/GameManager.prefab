@@ -44,12 +44,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed9dcea47b49d0a4e9a27393b774b7a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  time: 60
+  gameData: {fileID: 0}
+  gameMode: 0
+  map: 0
+  playerPrefab: {fileID: 1713198858853279929, guid: 6890e05bd6ca4c94696904c5df481c3e, type: 3}
+  players: []
+  controlSchemes: []
+  teams: []
+  teamsUIContainer: {fileID: 0}
+  maps: []
+  spawnPointsObjects: []
+  spawnPoints: []
   timerText: {fileID: 0}
-  playerLivesTexts:
-  - {fileID: 0}
-  - {fileID: 0}
-  uiCanvas: {fileID: 0}
-  healthCircles:
-  - {fileID: 0}
-  - {fileID: 0}
+  time: 60
+  gameOver: {fileID: 0}
