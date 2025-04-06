@@ -11,14 +11,14 @@ namespace Brawlley.Attacks
         void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.CompareTag("Spell"))
-            {  
+            {
+                Debug.Log("Rebateu");
                 Spell spell = collision.GetComponent<Spell>();
                 spell.ignoreTeam = ignoreTeam;
                 spell.spellRigidbody.Sleep();
                 Vector2 newDirection = direction * force;
                 if (direction == Vector2.zero)
                 {
-                    Debug.Log("Rebateu paradodo");
                     newDirection.x = horizontalDirection * force;
                 }
                 spell.direction = newDirection;

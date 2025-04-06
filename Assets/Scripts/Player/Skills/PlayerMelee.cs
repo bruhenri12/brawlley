@@ -15,6 +15,9 @@ namespace Brawlley
         {
             base.Start();
             playerAnim = GetComponent<Animator>();
+            
+            meleeAttack.ignoreTeam = player.Team.name;
+            riposte.ignoreTeam = player.Team.name;
         }
         public void PrepareAttack(InputAction.CallbackContext context)
         {
@@ -29,7 +32,6 @@ namespace Brawlley
                 if (status == AttackStatus.Ready)
                 {
                     meleeAttack.direction = direction;
-                    meleeAttack.ignoreTeam = player.Team.name;
                     meleeAttack.knockbackForce = knockbackForce;
                     meleeAttack.damage = damage;
                     riposte.horizontalDirection = playerViewDirection == PlayerViewDirection.Right ? 1f : -1f;
