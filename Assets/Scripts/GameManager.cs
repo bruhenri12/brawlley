@@ -135,8 +135,8 @@ public class GameManager : MonoBehaviour
 
         int mapIndex = (int)map % maps.Count;
         Instantiate(maps[mapIndex]);
-        Instantiate(spawnPointsObjects[mapIndex]);
-        spawnPoints = spawnPointsObjects[mapIndex].GetComponent<SpawnPoints>().spawnPoints;
+        GameObject spawnPointObject = Instantiate(spawnPointsObjects[mapIndex]);
+        spawnPoints = spawnPointObject.GetComponent<SpawnPoints>().spawnPoints;
     }
 
     
