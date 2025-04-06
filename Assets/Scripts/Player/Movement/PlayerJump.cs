@@ -34,6 +34,14 @@ public class PlayerJump : MonoBehaviour
             }
         }
 
+    public void OnRemoteJump()
+    {
+        if (JumpsRemaining > 0)
+        {
+            DoAJump();
+        }
+    }
+
     #region MonoBehaviour Lifecycle Methods
     void Start()
     {

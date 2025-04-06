@@ -49,6 +49,19 @@ namespace Brawlley
             }
         }
 
+        public void OnRemoteAttack()
+        {
+            if (status == AttackStatus.Ready)
+            {
+                playerAnim.SetFloat("AimingDirY", direction.y);
+                playerAnim.SetBool("CastAttack", true);
+            }
+            else
+            {
+                playerAnim.SetTrigger("CancelCastTrigger");
+            }
+        }
+
         public void CastSpell()
         {
             if (direction == Vector2.zero)

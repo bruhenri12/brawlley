@@ -93,7 +93,7 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Player Controller Methods
-    void SetDirection(InputAction.CallbackContext context)
+    public void SetDirection(InputAction.CallbackContext context)
     {
         playerDirection = context.ReadValue<Vector2>();
         if (playerMovement != null) playerMovement.Direction = new(playerDirection.x, Mathf.Min(0, playerDirection.y));
@@ -103,14 +103,38 @@ public class PlayerController : MonoBehaviour
         if (playerSpell != null) playerSpell.Direction = playerDirection;
     }
 
-    void OnAiming(InputAction.CallbackContext context)
+    public void RemoteSetDirection(Vector2 direction)
+    {
+        playerDirection = direction;
+        if (playerMovement != null) playerMovement.Direction = new(playerDirection.x, Mathf.Min(0, playerDirection.y));
+        if (playerDash != null) playerDash.Direction = playerDirection.normalized;
+        if (playerMelee != null) playerMelee.Direction = playerDirection;
+        if (playerMelee != null) playerMelee.UpdateDirection(playerDirection.x);
+        if (playerSpell != null) playerSpell.Direction = playerDirection;
+    }
+
+    public void OnAiming(InputAction.CallbackContext context)
     {
         DisableMovement();
     }
 
-    void OnStopAiming(InputAction.CallbackContext context)
+    public void OnStopAiming(InputAction.CallbackContext context)
     {
         EnableMovement();
+    }
+
+    public void SetDiagonal(int id)
+    {
+        if (id == 0) { playerDirection = new Vector2(1, 1); }
+        else if (id == 1) { playerDirection = new Vector2(1, -1); }
+        else if (id == 2) { playerDirection = new Vector2(-1, -1); }
+        else if (id == 3) { playerDirection = new Vector2(-1, 1); }
+
+        if (playerMovement != null) playerMovement.Direction = new(playerDirection.x, Mathf.Min(0, playerDirection.y));
+        if (playerDash != null) playerDash.Direction = playerDirection.normalized;
+        if (playerMelee != null) playerMelee.Direction = playerDirection;
+        if (playerMelee != null) playerMelee.UpdateDirection(playerDirection.x);
+        if (playerSpell != null) playerSpell.Direction = playerDirection;
     }
 
     public void DisableMovement()
