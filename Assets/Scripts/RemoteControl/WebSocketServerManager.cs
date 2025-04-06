@@ -148,6 +148,7 @@ public class WebSocketServerManager : MonoBehaviour
             case 0x0C: // SpellStart
                 Debug.Log("Spell start");
                 player.OnAiming(new InputAction.CallbackContext());
+                player.GetComponent<PlayerSpell>().PrepareAttack(new InputAction.CallbackContext());
                 break;
             case 0x0D: // SpellRelease
                 Debug.Log("Spell release");
