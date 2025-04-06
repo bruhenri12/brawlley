@@ -9,6 +9,7 @@ TagManager:
   - Melee
   - WorldBounds
   - Spell
+  - Riposte
   layers:
   - Default
   - TransparentFX
