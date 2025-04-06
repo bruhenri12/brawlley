@@ -47,7 +47,7 @@ public class PlayerSurfaceDetection : MonoBehaviour
     {
         //Determine if the player is stood on objects on the ground layer, using a pair of raycasts
         onGround = Physics2D.Raycast(transform.position + groundOffset, Vector2.down, groundLength, groundLayer) || Physics2D.Raycast(transform.position - groundOffset, Vector2.down, groundLength, groundLayer);
-        onWall = Physics2D.Raycast(transform.position + wallOffset, facingDirection, wallLength, groundLayer) || Physics2D.Raycast(transform.position - wallOffset, facingDirection, wallLength, groundLayer);
+        onWall = Physics2D.Raycast(transform.position + new Vector3(0f,-0.75f,0f) + wallOffset, facingDirection, wallLength, groundLayer) || Physics2D.Raycast(transform.position + new Vector3(0f, -0.75f, 0f) + - wallOffset, facingDirection, wallLength, groundLayer);
 
         playerAnim.SetBool("OnWall", onWall);
 
@@ -87,8 +87,8 @@ public class PlayerSurfaceDetection : MonoBehaviour
 
         // Draw the wall detection rays
         Gizmos.color = onWall ? Color.blue : Color.red;
-        Gizmos.DrawLine(transform.position + wallOffset, transform.position + wallOffset + facingDirection.x * wallLength * Vector3.right);
-        Gizmos.DrawLine(transform.position - wallOffset, transform.position - wallOffset + facingDirection.x * wallLength * Vector3.right);
+        Gizmos.DrawLine(transform.position + new Vector3(0f, -0.75f, 0f) + wallOffset, transform.position + new Vector3(0f, -0.75f, 0f) +  wallOffset + facingDirection.x * wallLength * Vector3.right);
+        Gizmos.DrawLine(transform.position + new Vector3(0f, -0.75f, 0f) - wallOffset, transform.position + new Vector3(0f, -0.75f, 0f) - wallOffset + facingDirection.x * wallLength * Vector3.right);
 
 
     }
