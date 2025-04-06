@@ -146,11 +146,13 @@ public class WebSocketServerManager : MonoBehaviour
                 player.GetComponent<PlayerParry>().OnRemoteParry();
                 break;
             case 0x0C: // SpellStart
+                Debug.Log("Spell start");
                 player.OnAiming(new InputAction.CallbackContext());
                 break;
             case 0x0D: // SpellRelease
+                Debug.Log("Spell release");
                 player.OnStopAiming(new InputAction.CallbackContext());
-                player.GetComponent<PlayerSpell>().OnRemoteAttack();
+                player.GetComponent<PlayerSpell>().OnAttack(new InputAction.CallbackContext());
                 break;
             case 0x0E: // Melee
                 player.GetComponent<PlayerMelee>().OnAttack(new InputAction.CallbackContext());
