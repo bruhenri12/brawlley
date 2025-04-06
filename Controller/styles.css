@@ -1,0 +1,223 @@
+body {
+	min-height: 100vh;
+	max-height: 100vh;
+	box-sizing: border-box;
+}
+
+button {
+	user-select: none;
+	touch-action: manipulation;
+	padding: 0;
+} 
+.hidden {
+	display: none;
+}
+.button-container {
+	display: flex;
+	align-items: start;
+}
+
+.button-container .container {
+	display: flex;
+	align-items: center;
+}
+
+.left-button-container .red {
+	background-color: red
+}
+
+.left-button-container {
+	display: grid;
+	position: relative;
+	flex-wrap: wrap;
+	transform: translateY(-55px);
+}
+
+.button-container {
+}
+
+.left-button-container button {
+	--offset: 30%;
+	width: clamp(50px, 45vh, 200px); 
+	grid-column: 1 / span 2;
+	grid-row: 1 / span 2;
+	transform: rotate(var(--angle));
+	border: none;
+}
+
+.left-button-container button.diagonal {
+	width: clamp(25px, 23vh, 100px); 
+	--offset: 5%;
+}
+
+.right-button-container {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin-left: auto;
+	align-items: center;
+	margin-right: 50px;
+}
+
+.right-button-container > div {
+	display: flex;
+	gap: 10px;
+}
+
+.right-button-container button {
+	width: clamp(25px, 35vh, 100px); 
+}
+
+.first-row {
+	margin-left: 70px;
+}
+
+.third-row {
+	margin-right: 40px;
+}
+
+.touch-button {
+	--size : 30%;
+	background: transparent;
+}
+
+#up-button, #up-button-touch {
+	grid-column: 18 / span 24;
+	grid-row: 1 / span 24;
+}
+
+#up-button-touch{
+	clip-path: polygon(0% 0%, 0% var(--size), 100% var(--size), 100% 0%);
+}
+
+#up-button {
+	--angle: 45deg;
+	clip-path: polygon(calc(100% - var(--offset)) 0%, 0% calc(100% - var(--offset)), 100% 100%);
+}
+
+
+#up-left-button, #up-left-button-touch {
+	grid-column: 17 / span 12;
+	grid-row: 17 / span 12;
+}
+
+#up-left-button {
+	clip-path: polygon(100% 100%, calc(50% - var(--offset)) 0%, 0% calc(50% - var(--offset)));
+}
+
+#up-left-button-touch {
+	clip-path: polygon(0% 0%, calc(50% - var(--offset)) 0%, 0% calc(50% - var(--offset)));
+}
+
+#up-right-button, #up-right-button-touch {
+	grid-column: 31 / span 12;
+	grid-row: 17 / span 12;
+}
+
+#up-right-button {
+	clip-path: polygon(0% 100%, calc(50% + var(--offset)) 0%, 100% calc(50% - var(--offset)));
+}
+
+#up-right-button-touch {
+	clip-path: polygon(100% 0%, calc(50% + var(--offset)) 0%, 100% calc(50% - var(--offset)));
+}
+
+#down-left-button, #down-left-button-touch {
+	grid-column: 17 / span 12;
+	grid-row: 31 / span 12;
+}
+
+#down-left-button {
+	clip-path: polygon(100% 0%, calc(50% - var(--offset)) 100%, 0% calc(50% + var(--offset)));
+}
+
+#down-left-button-touch {
+	clip-path: polygon(0% 100%, calc(50% - var(--offset)) 100%, 0% calc(50% + var(--offset)));
+
+}
+
+#down-right-button, #down-right-button-touch {
+	grid-column: 31 / span 12;
+	grid-row: 31 / span 12;
+}
+
+#down-right-button {
+	clip-path: polygon(0% 0%, 100% calc(50% + var(--offset)), calc(50% + var(--offset)) 100%);
+
+}
+
+#down-right-button-touch {
+	clip-path: polygon(100% 100%, 100% calc(50% + var(--offset)), calc(50% + var(--offset)) 100%);
+
+}
+
+#right-button, #right-button-touch {
+	grid-column:  35 / span 24;
+	grid-row: 18 / span 24;
+}
+
+#right-button {
+	--angle: 45deg;
+	clip-path: polygon(calc(0% + var(--offset)) 0%, 100% calc(100% - var(--offset)), 0% 100%);
+}
+
+#right-button-touch {
+	clip-path: polygon(calc(100% - var(--size)) 0%, calc(100% - var(--size)) 100%, 100% 100%, 100% 0%);
+}
+
+#left-button, #left-button-touch {
+	grid-column:  1 / span 24;
+	grid-row: 18 / span 24;
+}
+
+#left-button {
+	--angle: 45deg;
+	clip-path: polygon(0% calc(0% + var(--offset)), calc(100% - var(--offset)) 100%, 100% 0%);
+}
+
+#left-button-touch {
+	clip-path: polygon(0% 0%, 0% 100%, var(--offset) 100%, var(--offset) 0%);
+}
+
+#down-button, #down-button-touch {
+	grid-column: 18 / span 24;
+	grid-row: 35 / span 24;
+}
+
+#down-button {
+	--angle: 45deg;
+	clip-path: polygon(100% calc(0% + var(--offset)), calc(0% + var(--offset)) 100%, 0% 0%);
+}
+
+
+#down-button-touch {
+	clip-path: polygon(0% calc(100% - var(--size)), 0% 100%, 100% 100%, 100% calc(100% - var(--size)));
+}
+
+.button-row {
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+}
+
+.first-row {
+
+}
+
+
+.y-buttons {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: 20px;
+	margin-top: -20px;
+}
+
+button {
+	width: 100px;
+	aspect-ratio: 1/1;
+}
+
+button {
+	font-size: 24px;
+}
