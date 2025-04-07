@@ -137,8 +137,13 @@ public class WebSocketServerManager : MonoBehaviour
                 if (direction.x == 1) direction.x = 0;
                 break;
             case 0x09: // Jump
-                player.GetComponent<PlayerJump>().OnRemoteJump();
+				PlayerJump playerJump = player.GetComponent<PlayerJump>();
+				playerJump.OnRemoteJump();
+				playerJump.canJump = false;
                 break;
+			case 0x15: // JumpRelease
+				player.GetComponent<PlayerJump>().canJump = true;
+				break;
             case 0x0A: // Dash
                 player.GetComponent<PlayerDash>().OnRemoteDash();
                 break;
@@ -146,35 +151,37 @@ public class WebSocketServerManager : MonoBehaviour
                 player.GetComponent<PlayerParry>().OnRemoteParry();
                 break;
             case 0x0C: // SpellStart
-                Debug.Log("Spell start");
                 player.OnAiming(new InputAction.CallbackContext());
                 player.GetComponent<PlayerSpell>().PrepareAttack(new InputAction.CallbackContext());
                 break;
             case 0x0D: // SpellRelease
-                Debug.Log("Spell release");
                 player.OnStopAiming(new InputAction.CallbackContext());
                 player.GetComponent<PlayerSpell>().OnAttack(new InputAction.CallbackContext());
                 break;
-            case 0x0E: // Melee
-                player.GetComponent<PlayerMelee>().OnAttack(new InputAction.CallbackContext());
+            case 0x0E: // MeleeStart
+                player.OnAiming(new InputAction.CallbackContext());
+                player.GetComponent<PlayerMelee>().PrepareAttack(new InputAction.CallbackContext());
+				break;
+			case 0x14: // MeleeRelease
+                player.OnStopAiming(new InputAction.CallbackContext());
+                player.GetComponent<PlayerMelee>().OnRemoteAttack();
                 break;
             case 0x0F: // MoveUpLeft
-                player.SetDiagonal(3);
+                direction = new (-1, 1);
                 break;
             case 0x10: // MoveUpRight
-                player.SetDiagonal(0);
+                direction = new (1, 1);
                 break;
             case 0x11: // MoveDownLeft
-                player.SetDiagonal(2);
+                direction = new (-1, -1);
                 break;
             case 0x12: // MoveDownRight
-                player.SetDiagonal(1);
+                direction = new (1, -1);
                 break;
             case 0x13: //StopMovement
                 direction.x = 0;
                 direction.y = 0;
                 break;
-                
         }
 
 

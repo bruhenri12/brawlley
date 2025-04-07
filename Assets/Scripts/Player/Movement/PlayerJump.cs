@@ -23,6 +23,8 @@ public class PlayerJump : MonoBehaviour
     private int JumpsRemaining;
     private float gravityScale;
 
+	public bool canJump = true;
+
     public void OnJump(InputAction.CallbackContext context)
         {
             if (context.started)
@@ -36,7 +38,8 @@ public class PlayerJump : MonoBehaviour
 
     public void OnRemoteJump()
     {
-        if (JumpsRemaining > 0)
+		Debug.Log("Can jump: " + canJump);
+        if (JumpsRemaining > 0 && canJump)
         {
             DoAJump();
         }

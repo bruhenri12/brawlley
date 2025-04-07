@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
     public Vector2 PlayerDirection => playerDirection;
     #endregion
 
+
     #region MonoBehaviour Lifecycle Methods
     void Awake()
     {
@@ -121,20 +122,6 @@ public class PlayerController : MonoBehaviour
     public void OnStopAiming(InputAction.CallbackContext context)
     {
         EnableMovement();
-    }
-
-    public void SetDiagonal(int id)
-    {
-        if (id == 0) { playerDirection = new Vector2(1, 1); }
-        else if (id == 1) { playerDirection = new Vector2(1, -1); }
-        else if (id == 2) { playerDirection = new Vector2(-1, -1); }
-        else if (id == 3) { playerDirection = new Vector2(-1, 1); }
-
-        if (playerMovement != null) playerMovement.Direction = new(playerDirection.x, Mathf.Min(0, playerDirection.y));
-        if (playerDash != null) playerDash.Direction = playerDirection.normalized;
-        if (playerMelee != null) playerMelee.Direction = playerDirection;
-        if (playerMelee != null) playerMelee.UpdateDirection(playerDirection.x);
-        if (playerSpell != null) playerSpell.Direction = playerDirection;
     }
 
     public void DisableMovement()

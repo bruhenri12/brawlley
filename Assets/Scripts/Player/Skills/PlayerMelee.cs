@@ -44,6 +44,23 @@ namespace Brawlley
             
         }
 
+        public void OnRemoteAttack()
+        {
+			playerAnim.SetBool("MeleeAttack", true);
+			if (status == AttackStatus.Ready)
+			{
+				meleeAttack.direction = direction;
+				meleeAttack.knockbackForce = knockbackForce;
+				meleeAttack.damage = damage;
+				riposte.horizontalDirection = playerViewDirection == PlayerViewDirection.Right ? 1f : -1f;
+				riposte.direction = direction;
+				riposte.force = riposteForce;
+
+				StartCooldown();
+			}
+            
+        }
+
         public void ResetMeleeAttack()
         {
             playerAnim.SetBool("MeleeAttack", false);
