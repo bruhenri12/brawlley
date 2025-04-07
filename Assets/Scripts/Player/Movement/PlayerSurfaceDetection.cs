@@ -47,7 +47,7 @@ public class PlayerSurfaceDetection : MonoBehaviour
     {
         //Determine if the player is stood on objects on the ground layer, using a pair of raycasts
         onGround = Physics2D.Raycast(transform.position + groundOffset, Vector2.down, groundLength, groundLayer) || Physics2D.Raycast(transform.position - groundOffset, Vector2.down, groundLength, groundLayer);
-        onWall = Physics2D.Raycast(transform.position + new Vector3(0f,-0.75f,0f) + wallOffset, facingDirection, wallLength, groundLayer) || Physics2D.Raycast(transform.position + new Vector3(0f, -0.75f, 0f) + - wallOffset, facingDirection, wallLength, groundLayer);
+        onWall = Physics2D.Raycast(transform.position + new Vector3(0f,-1.25f,0f) + wallOffset, facingDirection, wallLength, groundLayer) || Physics2D.Raycast(transform.position + new Vector3(0f, -1.25f, 0f) + - wallOffset, facingDirection, wallLength, groundLayer);
 
         playerAnim.SetBool("OnWall", onWall);
 

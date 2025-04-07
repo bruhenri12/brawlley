@@ -1,3 +1,4 @@
+using MatthewAssets;
 using UnityEditor.U2D.Animation;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -39,6 +40,8 @@ public class PlayerMovement : MonoBehaviour
     private bool pressingKey;
     private bool canMove = true;
 
+    [SerializeField] GameObject orb;
+
     public bool CanMove { get => canMove; set => canMove = value; }
     public Vector2 Direction { set => direction = value; }
 
@@ -55,6 +58,7 @@ public class PlayerMovement : MonoBehaviour
         if (direction.x != 0)
         {
             transform.localScale = new Vector3(direction.x > 0 ? 1 : -1, 1, 1);
+            //orb.transform.localScale = transform.localScale;
             pressingKey = true;
         }
         else

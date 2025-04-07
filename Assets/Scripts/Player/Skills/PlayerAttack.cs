@@ -43,6 +43,7 @@ namespace Brawlley
         {
             yield return new WaitForSeconds(cooldown);
             status = AttackStatus.Ready;
+            Debug.Log("Cooldown finished");
         }
 
         protected void StartCooldown()

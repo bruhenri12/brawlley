@@ -19,7 +19,7 @@ namespace Brawlley
         #endregion
 
         private Animator playerAnim;
-        [SerializeField] Vector3 spawnOffset;
+        [SerializeField] GameObject orb;
 
         #region MonoBehaviour Lifecycle Methods
         protected override void Start()
@@ -62,12 +62,15 @@ namespace Brawlley
             }
         }
 
+
         public void CastSpell()
         {
+            orb.GetComponent<Orb>().Disable(cooldown);
+
             if (direction == Vector2.zero)
                 direction.x = transform.localScale.x;
 
-            GameObject spellObject = Instantiate(spellPrefab, spellSpawnPoint.position + spawnOffset * spellSpawnPoint.localScale.x, Quaternion.identity);
+            GameObject spellObject = Instantiate(spellPrefab, spellSpawnPoint.position, Quaternion.identity);
 
             Spell spell = spellObject.GetComponent<Spell>();
             spell.damage = damage;
