@@ -2,6 +2,7 @@ body {
 	min-height: 100vh;
 	max-height: 100vh;
 	box-sizing: border-box;
+	overflow: hidden;
 }
 
 button {
@@ -38,7 +39,7 @@ button {
 
 .left-button-container button {
 	--offset: 30%;
-	width: clamp(50px, 45vh, 200px); 
+	width: clamp(50px, 40vh, 200px); 
 	grid-column: 1 / span 2;
 	grid-row: 1 / span 2;
 	transform: rotate(var(--angle));
@@ -46,8 +47,8 @@ button {
 }
 
 .left-button-container button.diagonal {
-	width: clamp(25px, 23vh, 100px); 
-	--offset: 5%;
+	width: clamp(25px, 30vh, 150px); 
+	--offset: 10%;
 }
 
 .right-button-container {
@@ -65,7 +66,7 @@ button {
 }
 
 .right-button-container button {
-	width: clamp(25px, 35vh, 100px); 
+	width: clamp(20px, 22vh, 100px); 
 }
 
 .first-row {
@@ -97,8 +98,8 @@ button {
 
 
 #up-left-button, #up-left-button-touch {
-	grid-column: 17 / span 12;
-	grid-row: 17 / span 12;
+	grid-column: 12 / span 18;
+	grid-row: 12 / span 18;
 }
 
 #up-left-button {
@@ -110,8 +111,8 @@ button {
 }
 
 #up-right-button, #up-right-button-touch {
-	grid-column: 31 / span 12;
-	grid-row: 17 / span 12;
+	grid-column: 30 / span 18;
+	grid-row: 12 / span 18;
 }
 
 #up-right-button {
@@ -123,8 +124,8 @@ button {
 }
 
 #down-left-button, #down-left-button-touch {
-	grid-column: 17 / span 12;
-	grid-row: 31 / span 12;
+	grid-column: 12 / span 18;
+	grid-row: 30 / span 18;
 }
 
 #down-left-button {
@@ -137,8 +138,8 @@ button {
 }
 
 #down-right-button, #down-right-button-touch {
-	grid-column: 31 / span 12;
-	grid-row: 31 / span 12;
+	grid-column: 30 / span 18;
+	grid-row: 30 / span 18;
 }
 
 #down-right-button {

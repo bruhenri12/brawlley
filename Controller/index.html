@@ -6,52 +6,58 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<meta name="theme-color" content="#000000">
 </head>
+
+<style>
+.hidden {
+	display: none!important;
+}
+</style>
 <body>
-	<h1 id="title"></h1>
-	<div id="pressing" class="hidden">Pressing</div>
+	<div class="fullscreen-container">
+		<div class="button-container">
+			<div class="left-button-container">
+				<button id="up-left-button" class="movement diagonal controller-button" data-x="0" data-y="1"></button>
+				<button id="up-left-button-touch" class="movement diagonal touch-button controller-button" data-x="0" data-y="1"></button>
+				<button id="up-right-button" class="movement diagonal controller-button" data-x="0" data-y="1"></button>
+				<button id="up-right-button-touch" class="movement diagonal touch-button controller-button" data-x="0" data-y="1"></button>
+				<button id="down-left-button" class="movement diagonal controller-button" data-x="0" data-y="1"></button>
+				<button id="down-left-button-touch" class="movement diagonal touch-button controller-button" data-x="0" data-y="1"></button>
+				<button id="down-right-button" class="movement diagonal controller-button" data-x="0" data-y="1"></button>
+				<button id="down-right-button-touch" class="movement diagonal touch-button controller-button" data-x="0" data-y="1"></button>
+				<button id="up-button" class="movement controller-button" data-x="0" data-y="1"></button>
+				<button id="up-button-touch" class="movement touch-button controller-button" data-x="0" data-y="1"></button>
+				<button id="right-button" class="movement controller-button" data-x="1" data-y="0"></button>
+				<button id="right-button-touch" class="movement touch-button controller-button" data-x="0" data-y="1"></button>
+				<button id="left-button" class="movement controller-button" data-x="-1" data-y="0"></button>
+				<button id="left-button-touch" class="movement touch-button controller-button" data-x="0" data-y="1"></button>
+				<button id="down-button" class="movement controller-button" data-x="0" data-y="-1" ></button>
+				<button id="down-button-touch" class="movement controller-button touch-button" data-x="0" data-y="-1" ></button>
+			</div>
+			<div class="right-button-container">
+				<div class="buttton-row first-row">
+					<button id="melee-button" class="controller-button">MELEE</button>
+					<button id="block-button" class="controller-button">BLOCK</button>
+				</div>
+				<div class="buttton-row second-row">
+					<button id="cast-button" class="controller-button">CAST</button>
+					<button id="dash-button" class="controller-button">DASH</button>
+				</div>
+				<div class="buttton-row third-row">
+					<button id="jump-button" class="controller-button">JUMP</button>
 
-	<div class="button-container">
-		<div class="left-button-container">
-			<button id="up-left-button" class="movement diagonal controller-button" data-x="0" data-y="1"></button>
-			<button id="up-left-button-touch" class="movement diagonal touch-button controller-button" data-x="0" data-y="1"></button>
-			<button id="up-right-button" class="movement diagonal controller-button" data-x="0" data-y="1"></button>
-			<button id="up-right-button-touch" class="movement diagonal touch-button controller-button" data-x="0" data-y="1"></button>
-			<button id="down-left-button" class="movement diagonal controller-button" data-x="0" data-y="1"></button>
-			<button id="down-left-button-touch" class="movement diagonal touch-button controller-button" data-x="0" data-y="1"></button>
-			<button id="down-right-button" class="movement diagonal controller-button" data-x="0" data-y="1"></button>
-			<button id="down-right-button-touch" class="movement diagonal touch-button controller-button" data-x="0" data-y="1"></button>
-			<button id="up-button" class="movement controller-button" data-x="0" data-y="1">UP</button>
-			<button id="up-button-touch" class="movement touch-button controller-button" data-x="0" data-y="1"></button>
-			<button id="right-button" class="movement controller-button" data-x="1" data-y="0">RIGHT</button>
-			<button id="right-button-touch" class="movement touch-button controller-button" data-x="0" data-y="1"></button>
-			<button id="left-button" class="movement controller-button" data-x="-1" data-y="0">LEFT</button>
-			<button id="left-button-touch" class="movement touch-button controller-button" data-x="0" data-y="1"></button>
-			<button id="down-button" class="movement controller-button" data-x="0" data-y="-1" >DOWN</button>
-			<button id="down-button-touch" class="movement controller-button touch-button" data-x="0" data-y="-1" ></button>
+				</div>
+
+			</div>
 		</div>
-		<div class="right-button-container">
-			<div class="buttton-row first-row">
-				<button id="melee-button" class="controller-button">MELEE</button>
-				<button id="block-button" class="controller-button">BLOCK</button>
-			</div>
-			<div class="buttton-row second-row">
-				<button id="cast-button" class="controller-button">CAST</button>
-				<button id="dash-button" class="controller-button">DASH</button>
-			</div>
-			<div class="buttton-row third-row">
-				<button id="jump-button" class="controller-button">JUMP</button>
 
-			</div>
-
-		</div>
 	</div>
 
     <script>
 		let lastSentTimestamp = 0;
 		let latencyDisplay = document.createElement('div');
 		let latencyAvgDisplay = document.createElement('div');
-		document.body.appendChild(latencyDisplay);
-		document.body.appendChild(latencyAvgDisplay);
+		// document.body.appendChild(latencyDisplay);
+		// document.body.appendChild(latencyAvgDisplay);
 
 
 		// Modified send function with timestamps
@@ -91,6 +97,8 @@
 			"up-right-button": 0x13, // StopUpRight
 			"down-left-button": 0x13, // StopDownLeft
 			"down-right-button": 0x13, // StopDownRight
+			"melee-button": 0x14, // MeleeEnd
+			"jump-button": 0x15, // JumpEnd
 		};
 
 		const current_url = window.location.href;
@@ -217,6 +225,8 @@
 				latencyAvgDisplay.textContent = `Latency Avg (last 100 commands): ${latencyAvg}`;
 			}
 		});
+
+		document.documentElement.requestFullscreen();
 
     </script>
 </body>
