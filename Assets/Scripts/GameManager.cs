@@ -17,7 +17,14 @@ public class GameManager : MonoBehaviour
     [Header("Game Resources")]
     [SerializeField] GameData gameData;
     [SerializeField] GameMode gameMode = GameMode.v1;
-    [SerializeField] Map map = Map.Arena1;
+    public Map map = Map.Arena1;
+
+    [Header("Volley Mode Resources")]
+    [SerializeField] TMP_Text volleyScoreText;
+    [SerializeField] int maxScore = 25;
+    [SerializeField] int maxDifferencePoints = 2;
+    [SerializeField] int maxSets = 3;
+    [SerializeField] int currentSet = 0;
 
     [Header("Player Resources")]
     [SerializeField] GameObject playerPrefab;
@@ -34,9 +41,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Map Resources")]
     [SerializeField] List<GameObject> maps = new();
-    [SerializeField] List<GameObject> spawnPointsObjects = new();
-
-    [Header("Spawn Resources")]
+    [SerializeField] List<SpawnPoints> spawnPointsComponents = new();
     [SerializeField] List<Transform> spawnPoints;
 
     [Header("Timer Resources")]
@@ -53,7 +58,14 @@ public class GameManager : MonoBehaviour
         DefineMap();
         DefineTeams();
         DefineTeamsUI();
-        StartCoroutine(TimerCoroutine());
+        if (map != Map.Volley)
+        {
+            timerText.gameObject.SetActive(true);
+            StartCoroutine(TimerCoroutine());
+            return;
+        }
+        volleyScoreText.gameObject.SetActive(true);
+        DefineVolleyMode();
     }
     #endregion
 
@@ -111,6 +123,7 @@ public class GameManager : MonoBehaviour
             Player playerObject = player.gameObject.GetComponent<Player>();
             playerObject.playerName = $"Player {i}";
             playerObject.name = $"Player {i}";
+            playerObject.spawnPoint = spawnPoint;
 
             players.Add(playerObject);
 
@@ -150,9 +163,19 @@ public class GameManager : MonoBehaviour
         }
 
         int mapIndex = (int)map % maps.Count;
-        Instantiate(maps[mapIndex]);
-        GameObject spawnPointObject = Instantiate(spawnPointsObjects[mapIndex]);
-        spawnPoints = spawnPointObject.GetComponent<SpawnPoints>().spawnPoints;
+        maps[mapIndex].SetActive(true);
+        spawnPointsComponents[mapIndex].gameObject.SetActive(true);
+        spawnPoints = spawnPointsComponents[mapIndex].GetComponent<SpawnPoints>().spawnPoints;
+    }
+
+    public void DefineVolleyMode()
+    {
+        string scoreText = "Set " + (currentSet + 1) + " scores:";
+        foreach (Team team in teams.Take(teamCount))
+        {
+            scoreText += $"\n<i> {team.name} (Sets {team.volleySets})</i>: <i> {team.volleyScore} </i>";
+        }
+        volleyScoreText.text = scoreText;
     }
     #endregion
 
@@ -258,6 +281,78 @@ public class GameManager : MonoBehaviour
         int randomIndex = UnityEngine.Random.Range(0, spawnPoints.Count);
         return spawnPoints[randomIndex];
     }
+
+    public void ScorePoint(string teamName)
+    {
+        Debug.Log($"Scoring point for team: {teamName}");
+        Team team = teams.Take(teamCount).FirstOrDefault(t => t.name == teamName);
+        team.volleyScore++;
+        CheckSetMatch();
+    }
+
+    public void TeamFault(string teamName)
+    {
+        Debug.Log($"Fault point for team: {teamName}");
+        List<Team> otherTeams = teams.Take(teamCount).Where(t => t.name != teamName).ToList();
+        foreach (Team team in otherTeams)
+        {
+            team.volleyScore++;
+        }
+        CheckSetMatch();
+    }
+
+    public void CheckSetMatch()
+    {
+        
+        string scoreText = "Set " + (currentSet + 1) + " scores:";
+        foreach (Team team in teams.Take(teamCount))
+        {
+            scoreText += $"\n<i> {team.name} (Sets {team.volleySets})</i>: <i> {team.volleyScore} </i>";
+        }
+        volleyScoreText.text = scoreText;
+
+        int setWinnerTeamIndex = -1;
+        for (int i = 0; i < teamCount; i++)
+        {
+            if (teams[i].volleyScore >= maxScore && 
+                teams[i].volleyScore - teams.Take(teamCount).Where(t => t != teams[i]).Max(t => t.volleyScore) >= maxDifferencePoints)
+            {
+                Debug.Log($"Team {teams[i].name} wins the set!");
+                setWinnerTeamIndex = i;
+                break;
+            }
+        }
+
+        if (setWinnerTeamIndex == -1) return; // No winner yet
+
+        teams[setWinnerTeamIndex].volleySets++;
+
+        currentSet++;
+        if (currentSet >= maxSets)
+        {
+            Team winner = teams.OrderByDescending(t => t.volleySets).FirstOrDefault();
+            if (winner != null && teams.Count(t => t.volleySets == winner.volleySets) == 1)
+            {
+                Debug.Log($"Team {winner.name} wins the match!");
+                HandleVolleyResults(winner);
+            }
+        }
+        else
+        {
+            foreach (Team team in teams.Take(teamCount))
+            {
+                team.volleyScore = 0;
+            }
+            Debug.Log($"Set {currentSet + 1} completed. Next set starting...");
+
+            scoreText = "Set " + (currentSet + 1) + " scores:";
+            foreach (Team team in teams.Take(teamCount))
+            {
+                scoreText += $"\n<i> {team.name} (Sets {team.volleySets})</i>: <i> {team.volleyScore} </i>";
+            }
+            volleyScoreText.text = scoreText;
+        }
+    }
     #endregion
 
     #region Game Over Methods
@@ -289,10 +384,23 @@ public class GameManager : MonoBehaviour
         else
         {
             message = "It's a tie between the following teams: ";
-            foreach (Team team in teams)
+
+            foreach (Team team in teams.Take(teamCount))
             {
                 message += $"\n<i> {team.name} </i>";
             }
+        }
+        gameOver.Setup(message);
+    }
+
+    public void HandleVolleyResults(Team team)
+    {
+        Debug.Log("Game Over!");
+        string message = $"The winner is <i> {team.name} </i>! They won <i> {team.volleySets} </i> sets!";
+        message += "\nFinal Scores:";
+        foreach (Team t in teams.Take(teamCount))
+        {
+            message += $"\n<i> {t.name} </i>: <i> {t.volleyScore} </i>";
         }
         gameOver.Setup(message);
     }

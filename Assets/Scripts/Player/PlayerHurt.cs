@@ -59,7 +59,12 @@ public class PlayerHurt : MonoBehaviour
     {
         playerHealth.ResetHealth();
         playerRb.linearVelocity = Vector2.zero;
-        transform.position = gameManager.GetRandomSpawnPoint().position;
+        Vector3 spawnPoint = gameManager.GetRandomSpawnPoint().position;
+        if (gameManager.map == Map.Volley)
+        {
+            spawnPoint = player.spawnPoint.position;
+        }
+        transform.position = spawnPoint;
         gameManager.HandlePlayerDamage(player, playerHealth.Damage);
     }
 
