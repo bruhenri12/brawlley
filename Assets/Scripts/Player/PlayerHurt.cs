@@ -37,6 +37,7 @@ public class PlayerHurt : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("WorldBounds")) { return; }
+        if (gameManager.isPreparing) { return; } // Ignore if in preparation phase
         if (playerDash.IsDashing) { return; } // Ignore if dashing
 
         if (collision.CompareTag("Spell"))
@@ -67,19 +68,30 @@ public class PlayerHurt : MonoBehaviour
 
     private void Respawn()
     {
-        playerHealth.ResetHealth();
         playerRb.linearVelocity = Vector2.zero;
+        if (gameManager.isPreparing)
+        {
+            transform.position = player.spawnPoint.position;
+            return; // Ignore if in preparation phase
+        }
         Vector3 spawnPoint = gameManager.GetRandomSpawnPoint().position;
         if (gameManager.map == Map.Volley)
         {
             spawnPoint = player.spawnPoint.position;
         }
         transform.position = spawnPoint;
+        playerHealth.ResetHealth();
         gameManager.HandlePlayerDamage(player, playerHealth.Damage);
     }
 
     public void Die()
     {
+        if (gameManager.isPreparing)
+        {
+            Debug.Log("Player is in preparation phase, cannot die.");
+            Respawn(); // Respawn instead of dying
+            return; // Ignore if in preparation phase
+        }
         playerHealth.Lives--;
         gameManager.HandlePlayerDeath(player, playerHealth.Lives);        
         if (playerHealth.Lives > 0) { Respawn(); }
