@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerJuice : MonoBehaviour
 {
@@ -16,6 +17,9 @@ public class PlayerJuice : MonoBehaviour
     [SerializeField] private ParticleSystem dashReloadParticles;
     [SerializeField] private ParticleSystem immuneParticles;
     [SerializeField] private ParticleSystem gravityCancelParticles;
+    [SerializeField] private ParticleSystem spellHitParticles;
+    [SerializeField] private ParticleSystem meleeHitParticles;
+    [SerializeField] private ParticleSystem riposteParticles;
 
     [Header("Components - Audio")]
     [SerializeField] AudioSource jumpSFX;
@@ -129,6 +133,32 @@ public class PlayerJuice : MonoBehaviour
         {
             gravityCancelParticles.Play();
         }
+    }
+
+    public void SpellHurtJuice(Vector3 position)
+    {
+        ParticleSystem ps = Instantiate(spellHitParticles, position, transform.rotation);
+        ps.Play();
+        Destroy(ps.gameObject, ps.main.duration + ps.main.startLifetime.constantMax);
+    }
+
+    public void MeleeHurtJuice(Vector3 position)
+    {
+        ParticleSystem ps = Instantiate(meleeHitParticles, position, transform.rotation);
+        ps.Play();
+        Destroy(ps.gameObject, ps.main.duration + ps.main.startLifetime.constantMax);
+    }
+
+    public void RiposteJuice(Vector3 position)
+    {
+        ParticleSystem ps = Instantiate(riposteParticles, position, transform.rotation);
+        ps.Play();
+        Destroy(ps.gameObject, ps.main.duration + ps.main.startLifetime.constantMax);
+    }
+
+    public void SpellReloadJuice()
+    {
+
     }
 
 }

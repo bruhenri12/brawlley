@@ -9,6 +9,7 @@ public class PlayerHurt : MonoBehaviour
     Player player;
     private PlayerHealth playerHealth;
     PlayerDash playerDash;
+    private PlayerJuice juice;
     private Rigidbody2D playerRb;
     private GameManager gameManager;
     [SerializeField] BoxCollider2D playerHurtbox;
@@ -20,6 +21,7 @@ public class PlayerHurt : MonoBehaviour
         playerDash = GetComponent<PlayerDash>();
         gameManager = FindAnyObjectByType<GameManager>(); // Ensure this is correct for accessing the GameManager
         player = GetComponent<Player>();
+        juice = GetComponent<PlayerJuice>();
     }
 
     public void GetHit(Vector2 direction, float damage = 10, float knockbackForce = 1f)
@@ -40,7 +42,7 @@ public class PlayerHurt : MonoBehaviour
         if (collision.CompareTag("Spell"))
         {
             //Chamar de Destruir os Spell no Player
-
+            juice.SpellHurtJuice(collision.transform.position);
             Spell spell = collision.GetComponent<Spell>();
             if (spell.ignoreTeam == player.Team.name) { return; }
             Debug.Log("Apanhou Spell");
@@ -49,9 +51,10 @@ public class PlayerHurt : MonoBehaviour
         }
         else if (collision.CompareTag("Melee"))
         {
-            //Chamar o Ofeito de Colisão Player Playerw
+            //Chamar o Ofeito de Colisão Player Player
             
             Melee meleeAttack = collision.GetComponent<Melee>();
+            juice.MeleeHurtJuice(meleeAttack.orbTransform.position);
             if (meleeAttack.ignoreTeam == player.Team.name) { return; }
             Debug.Log("Apanhou Melee");
             GetHit((playerRb.position - (Vector2)collision.transform.position).normalized, meleeAttack.damage, meleeAttack.knockbackForce);

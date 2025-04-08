@@ -5,7 +5,7 @@ public class Orb : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public ParticleSystem particlePrefab;
-
+ 
 
     public void Disable(float cooldown)
     {
@@ -25,4 +25,6 @@ public class Orb : MonoBehaviour
     {
         gameObject.SetActive(true);
     }
+
+
 }

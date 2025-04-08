@@ -8,12 +8,18 @@ namespace Brawlley.Attacks
         public Vector2 direction;
         public float force = 1f;
         public string ignoreTeam;
+        PlayerJuice juice;
+
+        private void Start()
+        {
+            juice = transform.parent.GetComponent<PlayerJuice>();
+        }
         void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.CompareTag("Spell"))
             {
                 //Chamar O Efeito de Rebatida
-
+                juice.RiposteJuice(collision.transform.position);
                 Debug.Log("Rebateu");
                 Spell spell = collision.GetComponent<Spell>();
                 spell.ignoreTeam = ignoreTeam;

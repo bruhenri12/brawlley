@@ -5,5 +5,6 @@ namespace Brawlley.Attacks
     public class Melee : Attack
     {
         public Vector2 direction;
+        public Transform orbTransform;
     }
 }

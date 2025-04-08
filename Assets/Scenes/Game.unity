@@ -1937,7 +1937,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4793859602626376410, guid: 3bd34b95db5ca3a408af350eac245c13, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9131445674854840002, guid: 3bd34b95db5ca3a408af350eac245c13, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2354,7 +2354,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bebfb3b1d3a81a8428f69478dd48f38e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputCooldown: 0.02
 --- !u!4 &1120753598
 Transform:
   m_ObjectHideFlags: 0
@@ -3339,7 +3338,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 650998594217971325, guid: d40dfd96d1cac984297c4f98ff1cf00e, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2270788544213783803, guid: d40dfd96d1cac984297c4f98ff1cf00e, type: 3}
       propertyPath: m_LocalPosition.x

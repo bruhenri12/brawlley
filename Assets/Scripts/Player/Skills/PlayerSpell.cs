@@ -9,7 +9,7 @@ namespace Brawlley
         #region Resources
         [Header("Player Spell Resources")]
         [SerializeField] GameObject spellPrefab;
-        [SerializeField] Transform spellSpawnPoint;
+        public Transform spellSpawnPoint;
         #endregion
 
         #region Data
@@ -21,12 +21,14 @@ namespace Brawlley
         private Animator playerAnim;
         private bool isHoldingCast = false;
         [SerializeField] GameObject orb;
+        private PlayerJuice juice;
 
         #region MonoBehaviour Lifecycle Methods
         protected override void Start()
         {
             base.Start();
             playerAnim = GetComponent<Animator>();
+            juice = GetComponent<PlayerJuice>();
         }
         #endregion
 
@@ -44,6 +46,7 @@ namespace Brawlley
 
         public override void OnAttack(InputAction.CallbackContext context)
         {
+            isHoldingCast = false;
             if (status == AttackStatus.Ready)
             {
                 playerAnim.SetFloat("AimingDirY", direction.y);
@@ -57,6 +60,7 @@ namespace Brawlley
 
         public void OnRemoteAttack()
         {
+            isHoldingCast = false;
             if (status == AttackStatus.Ready)
             {
                 playerAnim.SetFloat("AimingDirY", direction.y);
@@ -89,10 +93,15 @@ namespace Brawlley
             spell.ApplyForce();
 
             StartCooldown();
-            
 
+            Invoke(nameof(ReloadJuice), cooldown);
             playerAnim.SetBool("CastAttack", false);
-            isHoldingCast = false;
+            
+        }
+
+        private void ReloadJuice()
+        {
+            juice.SpellReloadJuice();
         }
 
         #endregion
