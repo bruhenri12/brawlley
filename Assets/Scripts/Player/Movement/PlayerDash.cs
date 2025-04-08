@@ -10,6 +10,7 @@ public class PlayerDash : MonoBehaviour
 
     private Rigidbody2D playerRb;
     private Animator playerAnim;
+    private PlayerJuice juice;
     private bool isDashing;
     private bool canDash = true;
 
@@ -26,27 +27,28 @@ public class PlayerDash : MonoBehaviour
 
     public void OnDash(InputAction.CallbackContext context)
     {
-        if (!canDash || isDashing) return;
+        if (!canDash || isDashing || surfaceDetector.GetOnWall()) return;
 
         if (context.started)
         {
             StartDash(inputDirection);
-            playerAnim.SetTrigger("DashTrigger");
-            playerAnim.ResetTrigger("EndDashTrigger");
+            juice.DashJuice(dashDirection);
+            playerAnim.SetBool("IsDashing", true);
         }
     }
 
     public void OnRemoteDash()
     {
-        if (isDashing || !canDash) return;
+        if (isDashing || !canDash ) return;
         StartDash(inputDirection);
     }
 
     void Start()
     {
         playerRb = GetComponent<Rigidbody2D>();
-        playerAnim = GetComponent<Animator>();
+        playerAnim = GetComponentInChildren<Animator>();
         surfaceDetector = GetComponent<PlayerSurfaceDetection>();
+        juice = GetComponent<PlayerJuice>();
     }
 
     void FixedUpdate()
@@ -67,15 +69,20 @@ public class PlayerDash : MonoBehaviour
         if (!canDash && Time.time >= dashCooldownEndTime)
         {
             canDash = true;
+            juice.ReloadDashJuice();
         }
     }
 
     private void StartDash(Vector2 direction)
     {
+        float neutralDashModifier = 0;
+        if (direction == Vector2.zero) { neutralDashModifier = 0.4f; }
+
+        
         isDashing = true;
         canDash = false;
         dashDirection = direction;
-        dashEndTime = Time.time + dashDuration;
+        dashEndTime = Time.time + dashDuration + neutralDashModifier;
         dashCooldownEndTime = Time.time + dashCooldown;
 
         playerRb.gravityScale = 0;
@@ -93,6 +100,6 @@ public class PlayerDash : MonoBehaviour
     {
         isDashing = false;
         playerRb.gravityScale = 1;
-        playerAnim.SetTrigger("EndDashTrigger");
+        playerAnim.SetBool("IsDashing", false);
     }
 }
