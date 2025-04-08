@@ -59,7 +59,7 @@ public class PlayerHurt : MonoBehaviour
     {
         playerHealth.ResetHealth();
         playerRb.linearVelocity = Vector2.zero;
-        transform.position = player.spawnPoint.position;
+        transform.position = gameManager.GetRandomSpawnPoint().position;
         gameManager.HandlePlayerDamage(player, playerHealth.Damage);
     }
 

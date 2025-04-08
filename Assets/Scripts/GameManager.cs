@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
     [Header("Game Over Resources")]
     [SerializeField] GameOverScreen gameOver;
 
-    #region Methods
+    #region Mono Behaviour Life Cycle Methods
     void Awake()
     {
         GetGame();
@@ -55,6 +55,9 @@ public class GameManager : MonoBehaviour
         DefineTeamsUI();
         StartCoroutine(TimerCoroutine());
     }
+    #endregion
+
+    #region Initialization Methods
     public void GetGame()
     {
         gameMode = gameData.gameMode;
@@ -84,10 +87,23 @@ public class GameManager : MonoBehaviour
                 break;
         }
 
+        List<Transform> spawnPointsHorizontallyOrdered = spawnPoints.OrderBy(spawnPoint => spawnPoint.position.x).ToList();
+
+        List<List<Transform>> teamSpawnPoints = new();
+        int pointsPerTeam = spawnPointsHorizontallyOrdered.Count / teamCount;
+
+        for (int i = 0; i < teamCount; i++)
+        {
+            List<Transform> teamPoints = spawnPointsHorizontallyOrdered
+                .Skip(i * pointsPerTeam)
+                .Take(pointsPerTeam)
+                .ToList();
+            teamSpawnPoints.Add(teamPoints);
+        }
+
         for (int i = 0; i < playerCount; i++)
         {
-            int randomIndex = UnityEngine.Random.Range(0, spawnPoints.Count);
-            Transform spawnPoint = spawnPoints[randomIndex];
+            Transform spawnPoint = teamSpawnPoints[i % teamCount][i / teamCount];
             playerPrefab.transform.position = spawnPoint.position;
             
             var player = PlayerInput.Instantiate(playerPrefab, controlScheme: controlSchemes[i], pairWithDevice: Keyboard.current, playerIndex: i);
@@ -95,13 +111,13 @@ public class GameManager : MonoBehaviour
             Player playerObject = player.gameObject.GetComponent<Player>();
             playerObject.playerName = $"Player {i}";
             playerObject.name = $"Player {i}";
-            playerObject.spawnPoint = spawnPoint;
-            spawnPoints.RemoveAt(randomIndex);
+
             players.Add(playerObject);
+
             Team team = teams[i % teamCount];
-            playerObject.Team = team;
             team.players.Add(playerObject);
             team.playersAlive++;
+            playerObject.Team = team;
         }
     }
 
@@ -138,8 +154,9 @@ public class GameManager : MonoBehaviour
         GameObject spawnPointObject = Instantiate(spawnPointsObjects[mapIndex]);
         spawnPoints = spawnPointObject.GetComponent<SpawnPoints>().spawnPoints;
     }
+    #endregion
 
-    
+    #region Game Management Methods
     IEnumerator TimerCoroutine()
     {
         while (time > 0)
@@ -236,6 +253,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public Transform GetRandomSpawnPoint()
+    {
+        int randomIndex = UnityEngine.Random.Range(0, spawnPoints.Count);
+        return spawnPoints[randomIndex];
+    }
+    #endregion
+
+    #region Game Over Methods
     void HandleResults(Team team)
     {
         Debug.Log("Game Over!");
@@ -287,7 +312,9 @@ public class GameManager : MonoBehaviour
         }
         return standingTeam;
     }
+    #endregion
 
+    #region Player Management Methods
     public void HandlePlayerDamage(Player player, float damage)
     {
         float t = Mathf.Clamp01( damage / (4 * 10f) ); // Assuming max damage is 4 times the damage taken

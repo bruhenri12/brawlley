@@ -15,10 +15,7 @@ namespace Brawlley
         [Header("Player Data")]
         [SerializeField] Team team;
         public Team Team { get => team; set => team = value; }
-        public Transform spawnPoint;
         public PlayerStatus status;
-
-        //public GameInputs GameInputs => playerController.GameInputs;
         #endregion
     }
 }
