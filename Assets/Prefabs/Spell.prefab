@@ -115,31 +115,7 @@ MonoBehaviour:
   ignoreTeam: 
   onTriggerEnterEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7261107104673086597}
-        m_TargetAssemblyTypeName: Brawlley.Attacks.Spell, Assembly-CSharp
-        m_MethodName: OnPlayerCollisionDealDamage
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 7261107104673086597}
-        m_TargetAssemblyTypeName: Brawlley.Attacks.Spell, Assembly-CSharp
-        m_MethodName: OnPlayerCollisionDealKnockback
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   spellRigidbody: {fileID: 157156168278266503}
   speed: 1
   timeToActivate: 0.1

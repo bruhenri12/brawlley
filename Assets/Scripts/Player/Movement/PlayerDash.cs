@@ -11,7 +11,7 @@ public class PlayerDash : MonoBehaviour
     private Rigidbody2D playerRb;
     private Animator playerAnim;
     private PlayerJuice juice;
-    private bool isDashing;
+    public bool isDashing;
     private bool canDash = true;
 
     private Vector2 dashDirection;

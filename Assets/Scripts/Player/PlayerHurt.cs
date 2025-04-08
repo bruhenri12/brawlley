@@ -8,6 +8,7 @@ public class PlayerHurt : MonoBehaviour
 {
     Player player;
     private PlayerHealth playerHealth;
+    PlayerDash playerDash;
     private Rigidbody2D playerRb;
     private GameManager gameManager;
     [SerializeField] BoxCollider2D playerHurtbox;
@@ -16,6 +17,7 @@ public class PlayerHurt : MonoBehaviour
     {
         playerRb = GetComponent<Rigidbody2D>();
         playerHealth = GetComponent<PlayerHealth>();
+        playerDash = GetComponent<PlayerDash>();
         gameManager = FindAnyObjectByType<GameManager>(); // Ensure this is correct for accessing the GameManager
         player = GetComponent<Player>();
     }
@@ -23,7 +25,7 @@ public class PlayerHurt : MonoBehaviour
     public void GetHit(Vector2 direction, float damage = 10, float knockbackForce = 1f)
     {
         playerHealth.Damage += damage; // Increase damage
-        Debug.Log("Player Damage taken: " + playerHealth.Damage);
+        Debug.Log("Damage taken: " + damage);
         gameManager.HandlePlayerDamage(player, playerHealth.Damage);
 
         playerRb.linearVelocity = playerHealth.Damage * direction;
@@ -33,6 +35,7 @@ public class PlayerHurt : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("WorldBounds")) { return; }
+        if (playerDash.IsDashing) { return; } // Ignore if dashing
 
         if (collision.CompareTag("Spell"))
         {
