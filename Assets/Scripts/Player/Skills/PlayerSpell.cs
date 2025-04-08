@@ -19,6 +19,7 @@ namespace Brawlley
         #endregion
 
         private Animator playerAnim;
+        private bool isHoldingCast = false;
         [SerializeField] GameObject orb;
 
         #region MonoBehaviour Lifecycle Methods
@@ -33,7 +34,12 @@ namespace Brawlley
 
         public void PrepareAttack(InputAction.CallbackContext context)
         {
+            if (!isHoldingCast)
+            {
                 playerAnim.SetTrigger("CastTrigger");
+                isHoldingCast = true;
+            }
+            
         }
 
         public override void OnAttack(InputAction.CallbackContext context)
@@ -86,6 +92,7 @@ namespace Brawlley
             
 
             playerAnim.SetBool("CastAttack", false);
+            isHoldingCast = false;
         }
 
         #endregion

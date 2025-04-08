@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2969638606675947030}
   - component: {fileID: 3043699126133200334}
+  - component: {fileID: 3807348014158674004}
   m_Layer: 8
   m_Name: OrbVFX
   m_TagString: Untagged
@@ -47,7 +48,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d8fe014e90cdcb49b4445d2e3aa95ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particlePrefab: {fileID: 0}
+  particlePrefab: {fileID: 6523699520211762466, guid: fd0996a8e3adfe3448d4f00e1b26cf02, type: 3}
+--- !u!114 &3807348014158674004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5970369284151934517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6430c6b449c1eaa4bb09d1124a1d7153, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visualTransform: {fileID: 2969638606675947030}
+  stretchScale: {x: 0.8, y: 1.2, z: 1}
+  stretchDuration: 0.1
+  squashScale: {x: 1.2, y: 0.8, z: 1}
+  squashDuration: 0.1
 --- !u!1001 &287156980861788087
 PrefabInstance:
   m_ObjectHideFlags: 0

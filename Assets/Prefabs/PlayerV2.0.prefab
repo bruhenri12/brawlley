@@ -264,6 +264,7 @@ MonoBehaviour:
   dashSpeed: 32
   dashDuration: 0.25
   dashCooldown: 1.5
+  isDashing: 0
 --- !u!114 &5833308156665780653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1044,6 +1045,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6222397141123290777}
     m_Modifications:
+    - target: {fileID: 1753360430855835719, guid: 7547215e9352d2744b300c4c31d18184, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2907245961066070619, guid: 7547215e9352d2744b300c4c31d18184, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2969638606675947030, guid: 7547215e9352d2744b300c4c31d18184, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1084,13 +1093,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3043699126133200334, guid: 7547215e9352d2744b300c4c31d18184, type: 3}
+      propertyPath: particlePrefab
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5730693340058126433, guid: 7547215e9352d2744b300c4c31d18184, type: 3}
       propertyPath: EmissionModule.enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5899633407941823954, guid: 7547215e9352d2744b300c4c31d18184, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5970369284151934517, guid: 7547215e9352d2744b300c4c31d18184, type: 3}
       propertyPath: m_Name
       value: OrbVFX
+      objectReference: {fileID: 0}
+    - target: {fileID: 8044079085845330204, guid: 7547215e9352d2744b300c4c31d18184, type: 3}
+      propertyPath: playOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9005003641545132924, guid: 7547215e9352d2744b300c4c31d18184, type: 3}
       propertyPath: m_Color.g
@@ -1105,7 +1126,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8177911602774831774, guid: 7547215e9352d2744b300c4c31d18184, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7547215e9352d2744b300c4c31d18184, type: 3}

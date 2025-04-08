@@ -12,6 +12,8 @@ namespace Brawlley.Attacks
         {
             if (collision.CompareTag("Spell"))
             {
+                //Chamar O Efeito de Rebatida
+
                 Debug.Log("Rebateu");
                 Spell spell = collision.GetComponent<Spell>();
                 spell.ignoreTeam = ignoreTeam;

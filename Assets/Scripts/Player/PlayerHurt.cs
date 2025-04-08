@@ -39,6 +39,8 @@ public class PlayerHurt : MonoBehaviour
 
         if (collision.CompareTag("Spell"))
         {
+            //Chamar de Destruir os Spell no Player
+
             Spell spell = collision.GetComponent<Spell>();
             if (spell.ignoreTeam == player.Team.name) { return; }
             Debug.Log("Apanhou Spell");
@@ -47,6 +49,8 @@ public class PlayerHurt : MonoBehaviour
         }
         else if (collision.CompareTag("Melee"))
         {
+            //Chamar o Ofeito de Colisão Player Playerw
+            
             Melee meleeAttack = collision.GetComponent<Melee>();
             if (meleeAttack.ignoreTeam == player.Team.name) { return; }
             Debug.Log("Apanhou Melee");

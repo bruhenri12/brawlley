@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
+using Brawlley;
 
 public class PlayerParry : MonoBehaviour
 {
@@ -76,9 +77,8 @@ public class PlayerParry : MonoBehaviour
 
     public void SummonBarrier()
     {
-        Instantiate(barrierPrefab, GetBarrierPosition(), Quaternion.identity);
+        Instantiate(barrierPrefab, GetBarrierPosition(), Quaternion.Euler(0, transform.localScale.x < 0 ? 180 : 0, 0));
         playerController.EnableMovement();
-        
 
     }
     private IEnumerator Cooldown()

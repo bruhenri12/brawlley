@@ -10,6 +10,7 @@ namespace Brawlley
         [SerializeField] Riposte riposte;
         [SerializeField] float riposteForce = 1f;
         Animator playerAnim;
+        private bool isHoldingMelee = false;
 
         protected override void Start()
         {
@@ -21,7 +22,11 @@ namespace Brawlley
         }
         public void PrepareAttack(InputAction.CallbackContext context)
         {
-            playerAnim.SetTrigger("MeleeStartTrigger");
+            if (!isHoldingMelee)
+            {
+                playerAnim.SetTrigger("MeleeStartTrigger");
+                isHoldingMelee = true;
+            }
 
         }
         public override void OnAttack(InputAction.CallbackContext context)
@@ -64,6 +69,7 @@ namespace Brawlley
         public void ResetMeleeAttack()
         {
             playerAnim.SetBool("MeleeAttack", false);
+            isHoldingMelee = false;
         }
 
     }
