@@ -12,6 +12,7 @@ public class PlayerSurfaceDetection : MonoBehaviour
     private Vector3 wallOffset;
     private Rigidbody2D playerRb;
     private Animator playerAnim;
+    private PlayerJuice juice;
     [SerializeField] private BoxCollider2D playerCollider;
     [SerializeField] private Vector2 colliderSizeGround = new(1,1);
     [SerializeField] private Vector2 colliderSizeAir = new (0.6f, 0.6f);
@@ -31,6 +32,7 @@ public class PlayerSurfaceDetection : MonoBehaviour
     {
         playerRb = GetComponent<Rigidbody2D>();
         playerAnim = GetComponent<Animator>();
+        juice = GetComponent<PlayerJuice>();
 
         groundOffset = new Vector3(colliderOffset.x, 0, 0);
         wallOffset = new Vector3(0, colliderOffset.y, 0);
@@ -60,6 +62,7 @@ public class PlayerSurfaceDetection : MonoBehaviour
                 playerCollider.size = colliderSizeGround;
                 playerCollider.edgeRadius = colliderRadiusGround;
                 playerAnim.SetBool("OnGround", true);
+                juice.LandingJuice();
             }
             else
             {

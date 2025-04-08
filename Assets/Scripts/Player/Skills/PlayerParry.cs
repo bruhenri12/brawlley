@@ -13,6 +13,7 @@ public class PlayerParry : MonoBehaviour
     private PlayerDash dash;
     private PlayerController playerController;
     private Animator playerAnim;
+    private PlayerJuice juice;
     private bool canParry;
     //private bool wasDashing;
 
@@ -22,6 +23,7 @@ public class PlayerParry : MonoBehaviour
         dash = GetComponent<PlayerDash>();
         playerAnim = GetComponent<Animator>();
         playerController = GetComponent<PlayerController>();
+        juice = GetComponent<PlayerJuice>();
         canParry = true;
     }
 
@@ -38,7 +40,9 @@ public class PlayerParry : MonoBehaviour
             //Ficar um tempinho a mais no ar se usar o gravity cancel
             if (dash.IsDashing)
             {
-                dash.ExtendDash(0.3f);
+                //dash.ExtendDash(0.3f);
+                playerAnim.SetBool("IsDashing", false);
+                juice.ParryJuice();
             }
         }
     }
