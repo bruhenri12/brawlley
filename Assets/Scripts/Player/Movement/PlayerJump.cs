@@ -39,7 +39,6 @@ public class PlayerJump : MonoBehaviour
 
     public void OnRemoteJump()
     {
-		Debug.Log("Can jump: " + canJump);
         if (JumpsRemaining > 0 && canJump)
         {
             DoAJump();

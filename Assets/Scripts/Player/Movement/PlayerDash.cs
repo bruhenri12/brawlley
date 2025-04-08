@@ -39,8 +39,10 @@ public class PlayerDash : MonoBehaviour
 
     public void OnRemoteDash()
     {
-        if (isDashing || !canDash ) return;
+        if (!canDash || isDashing || surfaceDetector.GetOnWall()) return;
         StartDash(inputDirection);
+        juice.DashJuice(dashDirection);
+        playerAnim.SetBool("IsDashing", true);
     }
 
     void Start()
@@ -65,7 +67,7 @@ public class PlayerDash : MonoBehaviour
             }
         }
 
-        // Atualiza se pode ou não dar dash novamente
+        // Atualiza se pode ou nï¿½o dar dash novamente
         if (!canDash && Time.time >= dashCooldownEndTime)
         {
             canDash = true;

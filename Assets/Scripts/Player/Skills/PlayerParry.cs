@@ -29,7 +29,7 @@ public class PlayerParry : MonoBehaviour
 
     public void OnParry(InputAction.CallbackContext context)
     {
-        // O player só pode subir uma barreira no chão ou se der um Dash neutro (Gravity Cancel)
+        // O player sï¿½ pode subir uma barreira no chï¿½o ou se der um Dash neutro (Gravity Cancel)
         if (context.started && canParry && (surfaceDetector.GetOnGround() || dash.GravityCancel))
         {
             playerController.DisableMovement();
@@ -51,15 +51,18 @@ public class PlayerParry : MonoBehaviour
     {
         if (canParry && (surfaceDetector.GetOnGround() || dash.GravityCancel))
         {
+            Debug.Log("Enter on remote parry");
             playerController.DisableMovement();
             playerAnim.SetTrigger("ParryTrigger");
-
+            
             StartCoroutine(Cooldown());
 
             //Ficar um tempinho a mais no ar se usar o gravity cancel
             if (dash.IsDashing)
             {
-                dash.ExtendDash(0.3f);
+                //dash.ExtendDash(0.3f);
+                playerAnim.SetBool("IsDashing", false);
+                juice.ParryJuice();
             }
         }
     }

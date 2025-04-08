@@ -9,7 +9,13 @@ button {
 	user-select: none;
 	touch-action: manipulation;
 	padding: 0;
+	border: none;
 } 
+
+button.clicked {
+	background-color: #ccc;
+}
+
 .hidden {
 	display: none;
 }
@@ -69,13 +75,6 @@ button {
 	width: clamp(20px, 22vh, 100px); 
 }
 
-.first-row {
-	margin-left: 70px;
-}
-
-.third-row {
-	margin-right: 40px;
-}
 
 .touch-button {
 	--size : 30%;
