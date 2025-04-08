@@ -48,6 +48,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] TMP_Text timerText;
     [SerializeField, Tooltip("Time in seconds")] float time = 60f;
 
+    [Header("Preparation Resources")]
+    public float preparationTime = 15;
+    public bool isPreparing = true;
+
     [Header("Game Over Resources")]
     [SerializeField] GameOverScreen gameOver;
 
@@ -58,14 +62,15 @@ public class GameManager : MonoBehaviour
         DefineMap();
         DefineTeams();
         DefineTeamsUI();
-        if (map != Map.Volley)
+        timerText.gameObject.SetActive(true);
+        if (isPreparing)
         {
-            timerText.gameObject.SetActive(true);
-            StartCoroutine(TimerCoroutine());
-            return;
+            StartCoroutine(PreparationCoroutine());
         }
-        volleyScoreText.gameObject.SetActive(true);
-        DefineVolleyMode();
+        else
+        {
+            DefineMode();
+        }
     }
     #endregion
 
@@ -168,8 +173,16 @@ public class GameManager : MonoBehaviour
         spawnPoints = spawnPointsComponents[mapIndex].GetComponent<SpawnPoints>().spawnPoints;
     }
 
-    public void DefineVolleyMode()
+    public void DefineMode()
     {
+        if (map != Map.Volley)
+        {
+            StartCoroutine(TimerCoroutine());
+            return;
+        }
+        timerText.gameObject.SetActive(false);
+        volleyScoreText.gameObject.SetActive(true);
+
         string scoreText = "Set " + (currentSet + 1) + " scores:";
         foreach (Team team in teams.Take(teamCount))
         {
@@ -180,6 +193,26 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Game Management Methods
+    IEnumerator PreparationCoroutine()
+    {
+        timerText.gameObject.SetActive(true);
+        while (preparationTime > 0)
+        {
+            timerText.text = "Preparation: " + Mathf.Round(preparationTime);
+            yield return null;
+            preparationTime -= Time.deltaTime;
+        }
+
+        timerText.text = "Preparation: 0\nFinished!";
+        isPreparing = false;
+
+        foreach (Player player in players)
+        {
+            player.transform.position = player.spawnPoint.position;
+        }
+
+        DefineMode();
+    }
     IEnumerator TimerCoroutine()
     {
         while (time > 0)
@@ -189,7 +222,7 @@ public class GameManager : MonoBehaviour
             time -= Time.deltaTime;
         }
 
-        timerText.text = "Time: 0";
+        timerText.text = "Time: 0\nFinished!";
         HandleTimeout();
     }
 
