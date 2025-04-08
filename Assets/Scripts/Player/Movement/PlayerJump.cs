@@ -10,6 +10,7 @@ public class PlayerJump : MonoBehaviour
     private Animator playerAnim;
     private PlayerSurfaceDetection surfaceDetector;
     private PlayerDash dash;
+    private PlayerJuice juice;
 
     [Header("Jump Settings")]
     [SerializeField, Range(1f, 10f)] private float jumpHeight = 5f;
@@ -52,6 +53,7 @@ public class PlayerJump : MonoBehaviour
         playerAnim = GetComponent<Animator>();
         surfaceDetector = GetComponent<PlayerSurfaceDetection>();
         dash = GetComponent<PlayerDash>();
+        juice = GetComponent<PlayerJuice>();
         HandleJumpPhysics();
      
     }
@@ -89,11 +91,13 @@ public class PlayerJump : MonoBehaviour
         if(surfaceDetector.GetOnWall() && !surfaceDetector.GetOnGround())
         {
             playerRb.linearVelocity = new Vector2(-wallJumpStrength * surfaceDetector.GetFacingDirection(), jumpSpeed);
+            Debug.Log("Teste");
         }
 
         playerRb.linearVelocityY = jumpSpeed;
 
         playerAnim.SetTrigger("JumpTrigger");
+        juice.JumpJuice();
 
         JumpsRemaining--;
     }
