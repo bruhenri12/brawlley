@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] int currentSet = 0;
 
     [Header("Player Resources")]
-    [SerializeField] GameObject playerPrefab;
+    [SerializeField] List<GameObject> playerPrefabs = new();
     [SerializeField] List<Player> players = new();
     int playerCount = 0;
 
@@ -118,9 +118,12 @@ public class GameManager : MonoBehaviour
             teamSpawnPoints.Add(teamPoints);
         }
 
+        playerPrefabs = playerPrefabs.OrderBy(_ => UnityEngine.Random.value).ToList();
+
         for (int i = 0; i < playerCount; i++)
         {
             Transform spawnPoint = teamSpawnPoints[i % teamCount][i / teamCount];
+            GameObject playerPrefab = playerPrefabs[i % playerPrefabs.Count];
             playerPrefab.transform.position = spawnPoint.position;
             
             var player = PlayerInput.Instantiate(playerPrefab, controlScheme: controlSchemes[i], pairWithDevice: Keyboard.current, playerIndex: i);

@@ -1184,6 +1184,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 122877765720794322, guid: 36ff61ce2d041074f962245c81bd2e86, type: 3}
+      propertyPath: playerPrefabs.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 122877765720794322, guid: 36ff61ce2d041074f962245c81bd2e86, type: 3}
       propertyPath: teams.Array.data[0].name
       value: Azul
       objectReference: {fileID: 0}
@@ -1239,6 +1243,34 @@ PrefabInstance:
       propertyPath: 'healthCircles.Array.data[1]'
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 122877765720794322, guid: 36ff61ce2d041074f962245c81bd2e86, type: 3}
+      propertyPath: 'playerPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1713198858853279929, guid: 28ac9dc2f78836949b969b3c8f83f118, type: 3}
+    - target: {fileID: 122877765720794322, guid: 36ff61ce2d041074f962245c81bd2e86, type: 3}
+      propertyPath: 'playerPrefabs.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1713198858853279929, guid: 3523a154245a6bd4ca57f6eeb0a38992, type: 3}
+    - target: {fileID: 122877765720794322, guid: 36ff61ce2d041074f962245c81bd2e86, type: 3}
+      propertyPath: 'playerPrefabs.Array.data[2]'
+      value: 
+      objectReference: {fileID: 1713198858853279929, guid: bc71af0c184e27b44910cba11c743fcd, type: 3}
+    - target: {fileID: 122877765720794322, guid: 36ff61ce2d041074f962245c81bd2e86, type: 3}
+      propertyPath: 'playerPrefabs.Array.data[3]'
+      value: 
+      objectReference: {fileID: 1713198858853279929, guid: 6a5789fe26beb1c4082210c5fc4dc429, type: 3}
+    - target: {fileID: 122877765720794322, guid: 36ff61ce2d041074f962245c81bd2e86, type: 3}
+      propertyPath: 'playerPrefabs.Array.data[4]'
+      value: 
+      objectReference: {fileID: 1713198858853279929, guid: 6890e05bd6ca4c94696904c5df481c3e, type: 3}
+    - target: {fileID: 122877765720794322, guid: 36ff61ce2d041074f962245c81bd2e86, type: 3}
+      propertyPath: 'playerPrefabs.Array.data[5]'
+      value: 
+      objectReference: {fileID: 1713198858853279929, guid: 39ce94c051c326948b5453939719afd6, type: 3}
+    - target: {fileID: 122877765720794322, guid: 36ff61ce2d041074f962245c81bd2e86, type: 3}
+      propertyPath: 'playerPrefabs.Array.data[6]'
+      value: 
+      objectReference: {fileID: 1713198858853279929, guid: 9d7c52ea471f1d3469ef5eee99345cbc, type: 3}
     - target: {fileID: 122877765720794322, guid: 36ff61ce2d041074f962245c81bd2e86, type: 3}
       propertyPath: 'controlSchemes.Array.data[0]'
       value: Keyboard0
@@ -1945,7 +1977,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4793859602626376410, guid: 3bd34b95db5ca3a408af350eac245c13, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9131445674854840002, guid: 3bd34b95db5ca3a408af350eac245c13, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2378,6 +2410,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bebfb3b1d3a81a8428f69478dd48f38e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputCooldown: 0.02
 --- !u!4 &1120753598
 Transform:
   m_ObjectHideFlags: 0
