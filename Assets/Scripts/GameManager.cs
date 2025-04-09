@@ -26,8 +26,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] int maxSets = 3;
     [SerializeField] int currentSet = 0;
 
+    [Header("UI Resources")]
+    [SerializeField] TMP_Text playerUITagPrefab;
+
     [Header("Player Resources")]
-    [SerializeField] GameObject playerPrefab;
+    [SerializeField] List<GameObject> playerPrefabs = new();
     [SerializeField] List<Player> players = new();
     int playerCount = 0;
 
@@ -118,16 +121,19 @@ public class GameManager : MonoBehaviour
             teamSpawnPoints.Add(teamPoints);
         }
 
+        playerPrefabs = playerPrefabs.OrderBy(_ => UnityEngine.Random.value).ToList();
+
         for (int i = 0; i < playerCount; i++)
         {
             Transform spawnPoint = teamSpawnPoints[i % teamCount][i / teamCount];
+            GameObject playerPrefab = playerPrefabs[i % playerPrefabs.Count];
             playerPrefab.transform.position = spawnPoint.position;
             
             var player = PlayerInput.Instantiate(playerPrefab, controlScheme: controlSchemes[i], pairWithDevice: Keyboard.current, playerIndex: i);
             
             Player playerObject = player.gameObject.GetComponent<Player>();
-            playerObject.playerName = $"Player {i}";
-            playerObject.name = $"Player {i}";
+            playerObject.playerName = $"P{i}";
+            playerObject.name = $"P{i}";
             playerObject.spawnPoint = spawnPoint;
 
             players.Add(playerObject);
@@ -136,6 +142,12 @@ public class GameManager : MonoBehaviour
             team.players.Add(playerObject);
             team.playersAlive++;
             playerObject.Team = team;
+
+            TMP_Text playerTag = Instantiate(playerUITagPrefab, playerUITagPrefab.transform.parent);
+            PlayerUITag playerTagComponent = playerObject.GetComponent<PlayerUITag>();
+            playerTagComponent.playerUIText = playerTag;
+            playerTag.gameObject.SetActive(true);
+            playerTagComponent.InitUI();
         }
     }
 
