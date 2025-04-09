@@ -1600,11 +1600,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2250690856716594918, guid: b6df6a0203cf1f14ebae187eb8bc1f32, type: 3}
       propertyPath: m_Size.x
-      value: 90
+      value: 98.85981
       objectReference: {fileID: 0}
     - target: {fileID: 2250690856716594918, guid: b6df6a0203cf1f14ebae187eb8bc1f32, type: 3}
       propertyPath: m_Size.y
-      value: 50
+      value: 66.89543
+      objectReference: {fileID: 0}
+    - target: {fileID: 2250690856716594918, guid: b6df6a0203cf1f14ebae187eb8bc1f32, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.1030159
+      objectReference: {fileID: 0}
+    - target: {fileID: 2250690856716594918, guid: b6df6a0203cf1f14ebae187eb8bc1f32, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.20603943
       objectReference: {fileID: 0}
     - target: {fileID: 2391369866530031261, guid: b6df6a0203cf1f14ebae187eb8bc1f32, type: 3}
       propertyPath: m_Name
@@ -2203,10 +2211,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8501659457424249389, guid: d40dfd96d1cac984297c4f98ff1cf00e, type: 3}
-      propertyPath: m_Volume
-      value: 0.1
-      objectReference: {fileID: 0}
     - target: {fileID: 2497675020981799848, guid: d40dfd96d1cac984297c4f98ff1cf00e, type: 3}
       propertyPath: gameManager
       value: 
@@ -2223,6 +2227,10 @@ PrefabInstance:
       propertyPath: gameManager
       value: 
       objectReference: {fileID: 710337541}
+    - target: {fileID: 8501659457424249389, guid: d40dfd96d1cac984297c4f98ff1cf00e, type: 3}
+      propertyPath: m_Volume
+      value: 0.1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
