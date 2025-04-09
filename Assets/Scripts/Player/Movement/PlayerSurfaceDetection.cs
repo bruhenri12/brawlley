@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerSurfaceDetection : MonoBehaviour
 {
+    private PlayerSoundController soundController;
     
     private bool onGround;
     private bool onWall;
@@ -30,6 +31,7 @@ public class PlayerSurfaceDetection : MonoBehaviour
 
     private void Awake()
     {
+        soundController = GetComponent<PlayerSoundController>();
         playerRb = GetComponent<Rigidbody2D>();
         playerAnim = GetComponent<Animator>();
         juice = GetComponent<PlayerJuice>();
@@ -62,7 +64,9 @@ public class PlayerSurfaceDetection : MonoBehaviour
                 playerCollider.size = colliderSizeGround;
                 playerCollider.edgeRadius = colliderRadiusGround;
                 playerAnim.SetBool("OnGround", true);
+
                 juice.LandingJuice();
+                soundController?.PlayLand();
             }
             else
             {

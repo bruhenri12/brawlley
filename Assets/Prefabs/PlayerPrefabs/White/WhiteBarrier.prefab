@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5601380905896790016}
   - component: {fileID: 803596796765330686}
   - component: {fileID: 5568572919204251960}
+  - component: {fileID: 8766287779484833220}
   m_Layer: 6
   m_Name: WhiteBarrier
   m_TagString: Untagged
@@ -242,6 +243,25 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 7
+--- !u!114 &8766287779484833220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2047825026200983600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 464c7f8cb3650175d802cce7607e43f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stepSound: {fileID: 8300000, guid: 74472b42ed8ad0fedaf172d7adc5d8c6, type: 3}
+  jumpSound: {fileID: 8300000, guid: ea376487992c5740186f7573297e2c2c, type: 3}
+  landSound: {fileID: 8300000, guid: 6aefad89f4196a9c58220fc1c8630f14, type: 3}
+  meleeSound: {fileID: 8300000, guid: bee4674405ae782c0b5919e9df9d46ad, type: 3}
+  barrierSound: {fileID: 8300000, guid: 700e9114807d0d4028a27e41822522e7, type: 3}
+  projectileSound: {fileID: 8300000, guid: cf3cda5161ef72069864613cfdb1a31f, type: 3}
+  hitSound: {fileID: 8300000, guid: e9151477dee72dcd4814a7da193cf306, type: 3}
 --- !u!1001 &7426956942176281923
 PrefabInstance:
   m_ObjectHideFlags: 0

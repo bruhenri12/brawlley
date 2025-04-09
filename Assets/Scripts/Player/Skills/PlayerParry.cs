@@ -10,6 +10,7 @@ public class PlayerParry : MonoBehaviour
     [SerializeField] float horizontalOffset = 1f;
     [SerializeField] float verticalOffset = 1f;
     [SerializeField] float parryCooldown = 1f;
+    private PlayerSoundController soundController;
     private PlayerSurfaceDetection surfaceDetector;
     private PlayerDash dash;
     private PlayerController playerController;
@@ -20,6 +21,7 @@ public class PlayerParry : MonoBehaviour
 
     private void Start()
     {
+        soundController = GetComponent<PlayerSoundController>();
         surfaceDetector = GetComponent<PlayerSurfaceDetection>();
         dash = GetComponent<PlayerDash>();
         playerAnim = GetComponent<Animator>();
@@ -78,6 +80,7 @@ public class PlayerParry : MonoBehaviour
     public void SummonBarrier()
     {
         Instantiate(barrierPrefab, GetBarrierPosition(), Quaternion.Euler(0, transform.localScale.x < 0 ? 180 : 0, 0));
+        soundController?.PlayBarrier();
         playerController.EnableMovement();
 
     }

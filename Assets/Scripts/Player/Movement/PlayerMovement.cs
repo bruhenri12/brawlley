@@ -6,6 +6,9 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Components")]
+    private PlayerSoundController soundController;
+    private float stepTimer = 0f;
+    [SerializeField] private float stepRate = 0.4f;
 
     private Rigidbody2D playerRb;
     private Animator playerAnim;
@@ -47,6 +50,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Awake()
     {
+        soundController = GetComponent<PlayerSoundController>();
         //Find the character's Rigidbody and ground detection script
         playerRb = GetComponent<Rigidbody2D>();
         playerAnim = GetComponent<Animator>();
@@ -83,6 +87,7 @@ public class PlayerMovement : MonoBehaviour
         playerAnim.SetFloat("AnimMoveY", velocity.y);
 
         RunWithAcceleration();
+        TryPlayStepSound();
     }
 
     private void RunWithAcceleration()
@@ -144,5 +149,18 @@ public class PlayerMovement : MonoBehaviour
 
         playerRb.linearVelocity = velocity;
     }
+
+    private void TryPlayStepSound()
+    {
+        if (!onGround || Mathf.Abs(velocity.x) < 0.1f) return;
+
+        stepTimer -= Time.fixedDeltaTime;
+        if (stepTimer <= 0f)
+        {
+            soundController?.PlayStep();
+            stepTimer = stepRate;
+        }
+    }
+
 
 }

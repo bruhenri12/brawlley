@@ -22,8 +22,7 @@ public class PlayerJuice : MonoBehaviour
     [SerializeField] private ParticleSystem riposteParticles;
 
     [Header("Components - Audio")]
-    [SerializeField] AudioSource jumpSFX;
-    [SerializeField] AudioSource landSFX;
+    private PlayerSoundController soundController;
 
     [Header("Tilting")]
     [SerializeField, Tooltip("How far should the character tilt?")] public float maxTilt;
@@ -36,6 +35,7 @@ public class PlayerJuice : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        soundController = GetComponent<PlayerSoundController>();
         surfaceDetection = GetComponent<PlayerSurfaceDetection>();
         playerRb = GetComponent<Rigidbody2D>();
         squash = GetComponent<Squash>();

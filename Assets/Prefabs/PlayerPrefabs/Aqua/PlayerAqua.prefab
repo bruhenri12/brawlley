@@ -26,6 +26,7 @@ GameObject:
   - component: {fileID: 6468588079177857278}
   - component: {fileID: 2785937463450748753}
   - component: {fileID: 1183482564585285078}
+  - component: {fileID: -5647437160672643374}
   m_Layer: 8
   m_Name: PlayerAqua
   m_TagString: Player
@@ -217,6 +218,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c2d22898c3d9a34e9cbaef29fe95930, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stepRate: 0.4
   maxSpeed: 20
   maxAcceleration: 100
   maxDecceleration: 25
@@ -430,8 +432,6 @@ MonoBehaviour:
   spellHitParticles: {fileID: 2708598583397607910, guid: 896ca39eeedce0742b3a136bd298647e, type: 3}
   meleeHitParticles: {fileID: 2708598583397607910, guid: 896ca39eeedce0742b3a136bd298647e, type: 3}
   riposteParticles: {fileID: 6192724089161036655, guid: e17d9a3f04750764c8c0a7a0461e4c3b, type: 3}
-  jumpSFX: {fileID: 0}
-  landSFX: {fileID: 0}
   maxTilt: 5
   tiltSpeed: 10
 --- !u!114 &1183482564585285078
@@ -451,6 +451,25 @@ MonoBehaviour:
   stretchDuration: 0.2
   squashScale: {x: 1.4, y: 0.8, z: 1}
   squashDuration: 0.1
+--- !u!114 &-5647437160672643374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1713198858853279929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 464c7f8cb3650175d802cce7607e43f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stepSound: {fileID: 8300000, guid: 74472b42ed8ad0fedaf172d7adc5d8c6, type: 3}
+  jumpSound: {fileID: 8300000, guid: ea376487992c5740186f7573297e2c2c, type: 3}
+  landSound: {fileID: 8300000, guid: 6aefad89f4196a9c58220fc1c8630f14, type: 3}
+  meleeSound: {fileID: 8300000, guid: bee4674405ae782c0b5919e9df9d46ad, type: 3}
+  barrierSound: {fileID: 8300000, guid: 700e9114807d0d4028a27e41822522e7, type: 3}
+  projectileSound: {fileID: 8300000, guid: cf3cda5161ef72069864613cfdb1a31f, type: 3}
+  hitSound: {fileID: 8300000, guid: e9151477dee72dcd4814a7da193cf306, type: 3}
 --- !u!1 &2150343142690909940
 GameObject:
   m_ObjectHideFlags: 0
@@ -535,7 +554,7 @@ SpriteRenderer:
   m_Size: {x: 3, y: 3.0000978}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &3055515242605912023

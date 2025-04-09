@@ -11,9 +11,13 @@ namespace Brawlley
         [SerializeField] float riposteForce = 1f;
         Animator playerAnim;
         private bool isHoldingMelee = false;
+        private PlayerSoundController soundController;
+
 
         protected override void Start()
         {
+            soundController = GetComponent<PlayerSoundController>();
+
             base.Start();
             playerAnim = GetComponent<Animator>();
             
@@ -34,6 +38,8 @@ namespace Brawlley
             if (context.canceled)
             {
                 playerAnim.SetBool("MeleeAttack", true);
+                soundController?.PlayMelee();
+
                 if (status == AttackStatus.Ready)
                 {
                     meleeAttack.direction = direction;
@@ -52,6 +58,8 @@ namespace Brawlley
         public void OnRemoteAttack()
         {
 			playerAnim.SetBool("MeleeAttack", true);
+            soundController?.PlayMelee();
+
 			if (status == AttackStatus.Ready)
 			{
 				meleeAttack.direction = direction;

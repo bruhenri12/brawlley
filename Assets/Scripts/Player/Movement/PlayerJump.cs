@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 public class PlayerJump : MonoBehaviour
 {
     [Header("Components")]
+    private PlayerSoundController soundController;
+
     private Rigidbody2D playerRb;
     private Animator playerAnim;
     private PlayerSurfaceDetection surfaceDetector;
@@ -48,6 +50,7 @@ public class PlayerJump : MonoBehaviour
     #region MonoBehaviour Lifecycle Methods
     void Start()
     {
+        soundController = GetComponent<PlayerSoundController>();
         playerRb = GetComponent<Rigidbody2D>();
         playerAnim = GetComponent<Animator>();
         surfaceDetector = GetComponent<PlayerSurfaceDetection>();
@@ -97,6 +100,7 @@ public class PlayerJump : MonoBehaviour
 
         playerAnim.SetTrigger("JumpTrigger");
         juice.JumpJuice();
+        soundController?.PlayJump();
 
         JumpsRemaining--;
     }

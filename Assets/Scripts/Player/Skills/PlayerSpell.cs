@@ -6,6 +6,8 @@ namespace Brawlley
 {
     public class PlayerSpell : PlayerAttack
     {
+        private PlayerSoundController soundController;
+
         #region Resources
         [Header("Player Spell Resources")]
         [SerializeField] GameObject spellPrefab;
@@ -27,6 +29,7 @@ namespace Brawlley
         protected override void Start()
         {
             base.Start();
+            soundController = GetComponent<PlayerSoundController>();
             playerAnim = GetComponent<Animator>();
             juice = GetComponent<PlayerJuice>();
         }
@@ -91,6 +94,8 @@ namespace Brawlley
             spell.gravityScale = verticalCastGravity;
             spell.ApplyGravity(direction.y > 0f ? verticalCastGravity : 0f);
             spell.ApplyForce();
+
+            soundController?.PlayProjectile();
 
             StartCooldown();
 

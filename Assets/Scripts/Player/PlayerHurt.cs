@@ -12,10 +12,13 @@ public class PlayerHurt : MonoBehaviour
     private PlayerJuice juice;
     private Rigidbody2D playerRb;
     private GameManager gameManager;
+    private PlayerSoundController soundController;
+
     [SerializeField] BoxCollider2D playerHurtbox;
 
     private void Start()
     {
+        soundController = GetComponent<PlayerSoundController>();
         playerRb = GetComponent<Rigidbody2D>();
         playerHealth = GetComponent<PlayerHealth>();
         playerDash = GetComponent<PlayerDash>();
@@ -29,6 +32,7 @@ public class PlayerHurt : MonoBehaviour
         playerHealth.Damage += damage; // Increase damage
         Debug.Log("Damage taken: " + damage);
         gameManager.HandlePlayerDamage(player, playerHealth.Damage);
+        soundController?.PlayHit();
 
         playerRb.linearVelocity = playerHealth.Damage * direction;
     }
